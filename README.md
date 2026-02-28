@@ -66,5 +66,5 @@ This frontend connects with the backend API hosted in a separate repository:
 1. Clone this repository:
 
 ```bash
-git clone <YOUR_FRONTEND_REPO_LINK>
+git clone https://github.com/saakshi-sharma713/Digital-Planner-and-Journal
 cd frontend
