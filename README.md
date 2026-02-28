@@ -52,9 +52,19 @@ This is the **React frontend** for the Productivity App, a full-featured product
 - React Hot Toast for notifications
 - DOMPurify for safe HTML rendering
 
----SnapShots
+## SnapShots
+## Login Page
 <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/72f62c5a-0389-47ed-9d0d-08e6899cd215" />
+## Landing page
+<img width="1913" height="981" alt="image" src="https://github.com/user-attachments/assets/3a8f6b31-29ec-4553-87f5-3a61922bfae2" />
 
+<img width="1880" height="923" alt="image" src="https://github.com/user-attachments/assets/21012726-238c-49e0-9011-1bd96b2a6383" />
+
+## Dashboard
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/2509dbf2-c854-4410-bc92-aacaeca769e5" />
+
+## Video 
+https://drive.google.com/file/d/1-nEFV3vFLkKwAyp_t4UWeSB4-7n4YCEm/view?usp=sharing
 ## 🔗 Backend Repository
 This frontend connects with the backend API hosted in a separate repository:
 
