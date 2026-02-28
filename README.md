@@ -1,16 +1,70 @@
-# React + Vite
+# Productivity App - Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the **React frontend** for the Productivity App, a full-featured productivity tracker to manage journals, todos, mood, goals, habits, calendar, and reminders. It connects to the backend API for all data operations.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🌟 Features
 
-## React Compiler
+### Authentication
+- User Sign Up & Login
+- JWT-based token authentication
+- Logout functionality
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Dashboard & Navigation
+- Responsive header with navigation
+- Personalized greetings for logged-in users
+- Mobile-friendly hamburger menu
 
-## Expanding the ESLint configuration
+### Journal
+- Add, edit, and delete journals
+- View journal content with images & videos
+- Sanitize content to prevent XSS
+- "Read More" button to view full journal
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Todo Manager
+- Add, delete, and track todos
+- Mark todos as completed or pending
+- View progress day by day
+
+### Mood Tracker
+- Track daily moods
+- Visual chart representation
+- Mood history
+
+### Goal & Habit Tracker
+- Add and track goals
+- Daily habit tracking
+- View progress over time
+
+### Calendar & Reminders
+- Smart calendar view
+- Add, edit, delete reminders
+- Auto-refresh reminders every 30 seconds
+
+---
+
+## 🛠 Tech Stack
+- React 18
+- Tailwind CSS
+- Axios for API calls
+- React Router v6
+- React Hot Toast for notifications
+- DOMPurify for safe HTML rendering
+
+---
+
+## 🔗 Backend Repository
+This frontend connects with the backend API hosted in a separate repository:
+
+[Backend Repository Link](<YOUR_BACKEND_REPO_LINK>)
+
+---
+
+## 💻 Installation
+
+1. Clone this repository:
+
+```bash
+git clone <YOUR_FRONTEND_REPO_LINK>
+cd frontend
