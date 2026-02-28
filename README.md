@@ -57,7 +57,7 @@ This is the **React frontend** for the Productivity App, a full-featured product
 ## 🔗 Backend Repository
 This frontend connects with the backend API hosted in a separate repository:
 
-[Backend Repository Link](<YOUR_BACKEND_REPO_LINK>)
+[Backend Repository Link](<https://github.com/saakshi-sharma713/Digital-Planner-and-Journal-Backend>)
 
 ---
 
