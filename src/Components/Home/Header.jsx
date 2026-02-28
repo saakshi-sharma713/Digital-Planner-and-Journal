@@ -27,6 +27,7 @@ const Header = () => {
       <Link to="/todo" className="hover:text-sky-400">Todo</Link>
       <Link to="/calendar" className="hover:text-sky-400">Calendar</Link>
       <Link to="/mood" className="hover:text-sky-400">Mood</Link>
+       <Link to="/habit" className="hover:text-sky-400">Habit</Link>
       <Link to="/dashboard" className="hover:text-sky-400">Dashboard</Link>
       <Link to="/goals" className="hover:text-sky-400">Goals</Link>
      

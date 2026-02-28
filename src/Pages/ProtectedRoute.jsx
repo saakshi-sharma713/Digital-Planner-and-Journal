@@ -1,15 +1,15 @@
-
-import Home from "../Pages/Home"
-import Login from './Login';
+import React from "react";
 import { Navigate } from "react-router-dom";
-const ProtectedRoute = ({children}) => {
-    const token = localStorage.getItem("token");
 
- if(!token){
-    return <Navigate to="/"/>
- }
-  return children;
-  
-}
+const ProtectedRoute = ({ children }) => {
+  const token = localStorage.getItem("token"); // Make sure this matches where you store your token
 
-export default ProtectedRoute
+  if (!token) {
+    // Redirect to login page if not logged in
+    return <Navigate to="/" replace />;
+  }
+
+  return children; // Render the protected component
+};
+
+export default ProtectedRoute;

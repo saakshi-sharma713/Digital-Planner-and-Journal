@@ -12,6 +12,8 @@ export default function Journal(){
     const [file, setFile] = useState(null);
     const [notes, setNotes] = useState('');
     const [loading,setLoading] = useState(false)
+    
+
      const token = localStorage.getItem("token");
     // Custom toolbar with image & video options
     const modules = {

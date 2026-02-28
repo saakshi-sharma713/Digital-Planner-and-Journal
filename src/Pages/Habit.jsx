@@ -3,7 +3,7 @@ import axios from "axios";
 
 const API = "http://localhost:8990";
 
-export default function HabitDashboard() {
+export default function Habit() {
   const [habits, setHabits] = useState([]);
   const [newHabit, setNewHabit] = useState("");
   const [loading, setLoading] = useState(false);
