@@ -1,4 +1,4 @@
-# Productivity App - Frontend
+# Digital Planner and Journal - Frontend
 
 This is the **React frontend** for the Productivity App, a full-featured productivity tracker to manage journals, todos, mood, goals, habits, calendar, and reminders. It connects to the backend API for all data operations.
 
