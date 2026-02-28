@@ -1,0 +1,177 @@
+/* ===== OUTER BOARD ===== */
+/* ===== OUTER BOARD ===== */
+@import "tailwindcss";
+*{
+   font-family: 'Patrick Hand', cursive;
+}
+body{
+  margin:0;
+  padding:0;
+}
+.abc{
+    font-family: 'Patrick Hand', cursive;
+}
+.fc {
+  background: #1e1e1e !important;   /* black outer */
+  padding: 20px;
+  border-radius: 18px;
+  font-family: 'Caveat', cursive;
+}
+
+/* ===== REMOVE DEFAULT GRID BACKGROUND ===== */
+.fc-theme-standard td,
+.fc-theme-standard th {
+  border: 1px solid #ddd6c7 !important;
+}
+
+.fc-scrollgrid,
+.fc-scrollgrid-section,
+.fc-scrollgrid-sync-table {
+  background: transparent !important;
+  border: none !important;
+}
+
+/* ===== ALL CELLS CREME ===== */
+.fc-daygrid-day,
+.fc-timegrid-slot,
+.fc-col-header-cell {
+  background: white !important;
+  font-size:22px;
+}
+
+/* ===== HOVER LIGHT CREME ===== */
+.fc-daygrid-day:hover {
+  background: #efe8da !important;
+}
+
+/* ===== REMOVE TODAY GREEN/YELLOW ===== */
+.fc-day-today {
+  background: #ece4d6 !important;
+}
+
+/* ===== DAY NUMBERS ===== */
+.fc-daygrid-day-number {
+  color: #333 !important;
+  font-family: 'Patrick Hand', cursive !important;
+  font-size: 18px;
+}
+
+/* ===== MONTH TITLE ===== */
+.fc-toolbar-title {
+  color: #ffffff !important;
+  font-family: 'Patrick Hand', cursive !important;
+  font-size: 30px;
+}
+
+/* ===== BUTTONS ===== */
+.fc-button {
+  background: #333 !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 8px !important;
+  font-family: 'Patrick Hand', cursive !important;
+   margin: 0 6px !important;
+}
+
+.fc-button:hover {
+  background: #444 !important;
+}
+
+/* ===== REMOVE DEFAULT EVENT STYLE ===== */
+.fc-daygrid-event {
+  background: transparent !important;
+  border: none !important;
+}
+
+/* ===== PINNED PAPER TASK ===== */
+.pinned-event {
+  position: relative;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 24px;
+  color: #222;
+  background: #ffd166; /* paper color */
+  box-shadow: 0 6px 10px rgba(0,0,0,0.25);
+  transform: rotate(-2deg);
+  transition: 0.2s ease;
+  font-family: 'Caveat', cursive;
+  display: inline-block;
+}
+
+.pinned-event:nth-child(even) {
+  transform: rotate(2deg);
+}
+
+.pinned-event:hover {
+  transform: scale(1.05);
+}
+
+/* ===== Nail Effect ===== */
+.pinned-event::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 10px;
+  height: 10px;
+  background: radial-gradient(circle at 30% 30%, #bbb, #f5f1e8 );
+  border-radius: 50%;
+}
+
+.fc-col-header-cell-cushion {
+  font-size: 26px !important;   /* increase this if needed */
+  font-weight:bolder;
+  color: #333;
+  font-family: 'Patrick Hand', cursive;
+}
+
+.fc-timegrid-slot-label-cushion {
+  font-family: 'Patrick Hand', cursive !important;
+  font-size: 18px !important;
+  color: #444 !important;
+}
+
+.ql-editor{
+  font-family: 'Patrick Hand', cursive;
+  font-size: 1.1rem;
+  border:none;
+}
+h1{
+  font-family:'Patrick Hand', cursive;
+  font-size: 1.7rem;
+}
+.ql-toolbar {
+  border: none;              /* remove default gray border */
+  background-color: #60A5FA; /* lighter sky blue */
+  border-radius: 8px 8px 0 0;
+}
+.ql-editor img {
+  max-width: 300px;   /* limit width */
+  height: auto;       /* keep aspect ratio */
+  border-radius: 8px; /* optional rounded corners */
+}
+
+.ql-uploadImage::before {
+  content: "Upload"; /* upload icon */
+  font-size: 16px;
+  font-family: 'Patrick Hand', cursive;
+}
+/* Force toolbar buttons to wrap on small screens */
+.fc .fc-toolbar {
+  flex-wrap: wrap;
+  justify-content: center; /* center buttons */
+  gap: 0.5rem; /* spacing between buttons */
+}
+
+.fc .fc-toolbar-title {
+  font-size: 1rem; /* smaller title on mobile */
+}
+
+.day-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px; /* adds spacing between events */
+}
+
