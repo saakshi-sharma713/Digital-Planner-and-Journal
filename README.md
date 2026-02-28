@@ -37,10 +37,10 @@ This is the **React frontend** for the Productivity App, a full-featured product
 - Daily habit tracking
 - View progress over time
 
-### Calendar & Reminders
+### Calendar 
 - Smart calendar view
-- Add, edit, delete reminders
-- Auto-refresh reminders every 30 seconds
+
+  
 
 ---
 
