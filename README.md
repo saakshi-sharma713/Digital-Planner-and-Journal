@@ -55,6 +55,7 @@ This is the **React frontend** for the Productivity App, a full-featured product
 ## SnapShots
 ## Login Page
 <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/72f62c5a-0389-47ed-9d0d-08e6899cd215" />
+
 ## Landing page
 <img width="1913" height="981" alt="image" src="https://github.com/user-attachments/assets/3a8f6b31-29ec-4553-87f5-3a61922bfae2" />
 
