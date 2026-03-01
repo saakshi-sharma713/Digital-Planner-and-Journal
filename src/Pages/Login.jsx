@@ -31,9 +31,13 @@ const Login = () => {
 
       setName(result.data.name);   // update header instantly
       setToken(result.data.token);
-
+     if(result.data.status){
       toast.success("Login Successful!");
       navigate("/home");
+     }
+      else{
+        toast.error("Login failed!");
+      }
 
     } catch (error) {
       console.error("Login error:", error.response?.data || error.message);

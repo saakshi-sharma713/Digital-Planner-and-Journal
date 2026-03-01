@@ -21,65 +21,55 @@ export default function TodoAnalyticsTable() {
     }
   };
 
-  // 🔥 Calculate counts
-  const workCompleted = todos.filter(
-    (t) => t.type === "work" && t.status
-  ).length;
-
-  const workPending = todos.filter(
-    (t) => t.type === "work" && !t.status
-  ).length;
-
+  const workCompleted = todos.filter((t) => t.type === "work" && t.status)
+    .length;
+  const workPending = todos.filter((t) => t.type === "work" && !t.status)
+    .length;
   const personalCompleted = todos.filter(
     (t) => t.type === "personal" && t.status
   ).length;
-
   const personalPending = todos.filter(
     (t) => t.type === "personal" && !t.status
   ).length;
 
   return (
-    <div style={{ maxWidth: "700px", margin: "40px auto" }}>
-      <h2 style={{ textAlign: "center" }}>📊 Productivity Overview</h2>
+    <div className="max-w-3xl mx-auto my-10 px-4">
+      
 
-      <table
-        style={{
-          width: "100%",
-          borderCollapse: "collapse",
-          marginTop: "20px",
-        }}
-      >
-        <thead>
-          <tr style={{ background: "#f2f2f2" }}>
-            <th style={cell}>Type</th>
-            <th style={cell}>Completed</th>
-            <th style={cell}>Pending</th>
-            <th style={cell}>Total</th>
-          </tr>
-        </thead>
+      <div className="overflow-x-auto">
+        <table className="w-full min-w-[450px] border border-gray-300 rounded-lg h-96 md:h-[400px] text-2xl">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className={cell}>Type</th>
+              <th className={cell}>Completed</th>
+              <th className={cell}>Pending</th>
+              <th className={cell}>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr className="odd:bg-white even:bg-gray-50">
+              <td className={cell}>
+                <b>Work</b>
+              </td>
+              <td className={cell}>{workCompleted}</td>
+              <td className={cell}>{workPending}</td>
+              <td className={cell}>{workCompleted + workPending}</td>
+            </tr>
 
-        <tbody>
-          <tr>
-            <td style={cell}><b>Work</b></td>
-            <td style={cell}>{workCompleted}</td>
-            <td style={cell}>{workPending}</td>
-            <td style={cell}>{workCompleted + workPending}</td>
-          </tr>
-
-          <tr>
-            <td style={cell}><b>Personal</b></td>
-            <td style={cell}>{personalCompleted}</td>
-            <td style={cell}>{personalPending}</td>
-            <td style={cell}>{personalCompleted + personalPending}</td>
-          </tr>
-        </tbody>
-      </table>
+            <tr className="odd:bg-white even:bg-gray-50">
+              <td className={cell}>
+                <b>Personal</b>
+              </td>
+              <td className={cell}>{personalCompleted}</td>
+              <td className={cell}>{personalPending}</td>
+              <td className={cell}>{personalCompleted + personalPending}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
 
-const cell = {
-  border: "1px solid #ccc",
-  padding: "10px",
-  textAlign: "center",
-};
+const cell =
+  "border border-gray-300 px-4 py-2 text-center  md:text-base whitespace-nowrap ";

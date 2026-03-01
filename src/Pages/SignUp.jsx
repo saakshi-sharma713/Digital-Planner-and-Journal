@@ -5,6 +5,7 @@ import Doodle1 from '../Components/Doodles/Doodle1';
 import Doodle2 from '../Components/Doodles/Doodle2';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 const SignUp = () => {
     const [name, setName] = useState("");
@@ -31,11 +32,11 @@ const API = import.meta.env.VITE_URL;
 
                 navigate("/"); // redirect to home
             } else {
-                alert(result.data.message || "Signup failed");
+                toast.error(result.data.message || "Signup failed");
             }
         } catch (error) {
             console.error(error);
-            alert("Error signing up, please try again!");
+            toast.error("Error signing up, please try again!");
         }
     }
 

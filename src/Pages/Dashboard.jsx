@@ -76,6 +76,7 @@ export default function Dashboard() {
         </ChartCard>
 
         <ChartCard title="Mood">
+          
           {moods?.length > 0 ? (
             <MoodTrendChart data={moods} />
           ) : (

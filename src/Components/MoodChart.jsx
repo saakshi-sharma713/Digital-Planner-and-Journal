@@ -28,7 +28,7 @@ const moodsList = [
 ];
 
 export default function MoodTrendChart({ data }) {
-  if (!data || data.length === 0) return null;
+  if (!data || data.length === 0) return <p className="text-center">No mood data yet.</p>;
 
   const chartData = {
     labels: data.map((m) =>
@@ -41,14 +41,27 @@ export default function MoodTrendChart({ data }) {
         backgroundColor: "#FFB6C1",
         tension: 0.4,
         pointRadius: 6,
+        pointHoverRadius: 8,
       },
     ],
   };
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false, // ✅ allows dynamic height/width
     plugins: {
       legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: function (tooltipItem) {
+            const index = tooltipItem.dataIndex;
+            const moodEntry = data[index];
+            const note = moodEntry.note ? `  "${moodEntry.note}"` : "";
+            const mood = moodsList.find((m) => m.value === moodEntry.mood_value);
+            return `${mood ? mood.emoji : ""}  ${note}`;
+          },
+        },
+      },
     },
     scales: {
       y: {
@@ -56,17 +69,24 @@ export default function MoodTrendChart({ data }) {
         max: 5,
         ticks: {
           stepSize: 1,
-          font: { size: 24 },
+          font: { size: 30 },
           callback: function (val) {
-            const mood = moodsList.find(
-              (m) => m.value === Math.round(val)
-            );
+            const mood = moodsList.find((m) => m.value === Math.round(val));
             return mood ? mood.emoji : "";
           },
+        },
+      },
+      x: {
+        ticks: {
+          font: { size: 14 },
         },
       },
     },
   };
 
-  return <Line data={chartData} options={options} />;
+  return (
+    <div className="w-full h-96 md:h-[500px]">
+      <Line data={chartData} options={options} />
+    </div>
+  );
 }

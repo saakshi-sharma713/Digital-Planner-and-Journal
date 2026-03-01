@@ -48,14 +48,17 @@ export default function Calendar() {
 
     const randomColor = pastelColors[Math.floor(Math.random() * pastelColors.length)];
      const date = new Date(`${info.dateStr} ${time}`);
-  
+  const hours = String(date.getHours()).padStart(2,"0");
+  const minutes = String(date.getMinutes()).padStart(2,"0");
+  console.log(hours)
+  const timeOnly = `${hours}:${minutes}`
 
     try {
    const response =   await axios.post(
         `http://localhost:8990/calendar/add`,
         {
           title,
-          start_datetime:date,
+          start_datetime:timeOnly,
           background_color: randomColor,
           text_color: "#fff",
         },
@@ -130,41 +133,3 @@ const handleEventDrop = (info) => {
   if (editingEvent) {
     return <EventModal event={editingEvent} onSave={saveEditedEvent} onCancel={cancelEdit} />;
   }
-
-  return (
-    <div className="min-h-screen flex items-center justify-center p-4 sm:p-8 bg-gradient-to-br from-sky-100 via-white to-blue-100">
-      
-  <div className="w-full max-w-full sm:max-w-6xl bg-white shadow-2xl rounded-xl p-4 sm:p-8 border border-sky-100">
-    <FullCalendar
-      plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-      initialView="dayGridMonth"
-      headerToolbar={{
-        left: "prev,next today",
-        center: "title",
-        right: window.innerWidth < 640 
-          ? "dayGridMonth,timeGridDay"   // 📱 fewer options on mobile
-          : "dayGridMonth,timeGridWeek,timeGridDay"
-      }}
-      events={events}
-      dateClick={handleDateClick}
-      eventClick={handleEventClick}
-      editable={true}
-      selectable={true}
-      eventDrop={handleEventDrop}
-      height="auto"
-      eventContent={(info) => (
-        <div
-          className="pinned-event text-white text-xs sm:text-sm p-1 rounded cursor-pointer"
-          style={{ backgroundColor: info.event.backgroundColor }}
-        >
-          {info.event.title.length > 15
-            ? info.event.title.slice(0, 15) + "..."
-            : info.event.title}
-        </div>
-      )}
-    />
-  </div>
-</div>
-  );
-};
-
