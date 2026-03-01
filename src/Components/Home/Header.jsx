@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { UserContext } from "../ContextApi/DataContext";
+import { UserContext } from "../../ContextApi/DataContext";
+
 
 const Header = () => {
   const [open, setOpen] = useState(false);
@@ -10,7 +11,7 @@ const Header = () => {
   function handleLogout() {
     localStorage.removeItem("token");
     localStorage.removeItem("name");
-    setName("");   // 🔥 This updates header instantly
+    setName("");   
     navigate("/");
   }
 
@@ -18,7 +19,7 @@ const Header = () => {
     <header className="relative flex justify-between items-center px-6 py-4 shadow-md bg-white w-full">
       {/* Logo */}
       <h1 className="text-2xl font-bold text-gray-800">
-        My Journal App
+      Productive App
       </h1>
 
       <div className="flex items-center gap-6">

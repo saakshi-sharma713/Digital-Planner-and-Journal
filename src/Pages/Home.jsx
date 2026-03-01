@@ -10,7 +10,7 @@ export default function LandingPage() {
     <div className="min-h-screen bg-white flex flex-col">
 
       {/* ================= HEADER ================= */}
-  <Header/>
+  
       {/* ================= HERO ================= */}
       <section className="text-center py-24 bg-gradient-to-r from-sky-100 to-blue-100">
         <h2 className="text-5xl font-bold text-gray-800">

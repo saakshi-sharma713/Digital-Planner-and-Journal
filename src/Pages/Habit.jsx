@@ -10,7 +10,9 @@ export default function Habit() {
   const [loading, setLoading] = useState(false);
   const token = localStorage.getItem("token");
 
+  // Fetch habits from backend
   const fetchHabits = async () => {
+    if (!token) return; // stop if token not found
     setLoading(true);
     try {
       const res = await axios.get(`${API}/habits`, {
@@ -18,43 +20,48 @@ export default function Habit() {
       });
       setHabits(res.data);
     } catch (err) {
-      console.error(err);
+      console.error("Failed to fetch habits:", err);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   useEffect(() => {
     fetchHabits();
   }, []);
 
+  // Add new habit
   const addHabit = async () => {
-    if (!newHabit) return;
-    await axios.post(
-      `${API}/habits`,
-      { habit_name: newHabit },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    setNewHabit("");
-    fetchHabits();
+    if (!newHabit.trim()) return;
+    try {
+      await axios.post(
+        `${API}/habits`,
+        { habit_name: newHabit.trim() },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      setNewHabit("");
+      fetchHabits();
+    } catch (err) {
+      console.error("Failed to add habit:", err);
+    }
   };
 
+  // Toggle habit completion for today
   const toggleCompletion = async (habit) => {
+    if (!token) return;
     const today = new Date().toISOString().split("T")[0];
-    let updatedDays = habit.completed_days || [];
+    const updatedDays = habit.completed_days ? [...habit.completed_days] : [];
 
-    if (!updatedDays.includes(today)) {
-      updatedDays.push(today);
-    }
+    if (updatedDays.includes(today)) return; // already done
 
+    updatedDays.push(today);
     setHabits((prev) =>
-      prev.map((h) =>
-        h.id === habit.id ? { ...h, completed_days: updatedDays } : h
-      )
+      prev.map((h) => (h.id === habit.id ? { ...h, completed_days: updatedDays } : h))
     );
 
     try {
@@ -64,17 +71,24 @@ export default function Habit() {
         { headers: { Authorization: `Bearer ${token}` } }
       );
     } catch (err) {
-      console.error(err);
+      console.error("Failed to update habit:", err);
     }
   };
 
+  // Delete a habit
   const deleteHabit = async (id) => {
-    await axios.delete(`${API}/habits/${id}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    fetchHabits();
+    if (!token) return;
+    try {
+      await axios.delete(`${API}/habits/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      fetchHabits();
+    } catch (err) {
+      console.error("Failed to delete habit:", err);
+    }
   };
 
+  // Calculate streak (consecutive days)
   const calculateStreak = (completed_days) => {
     if (!completed_days || completed_days.length === 0) return 0;
     let streak = 0;
@@ -103,9 +117,9 @@ export default function Habit() {
         />
         <button
           onClick={addHabit}
-          disabled={!newHabit}
+          disabled={!newHabit.trim()}
           className={`ml-2 px-4 rounded ${
-            newHabit
+            newHabit.trim()
               ? "bg-purple-500 text-white hover:bg-purple-600"
               : "bg-gray-300 cursor-not-allowed"
           }`}
@@ -115,11 +129,9 @@ export default function Habit() {
       </div>
 
       {loading ? (
-       <Loader/>
+        <Loader />
       ) : habits.length === 0 ? (
-        <p className="text-center text-gray-500">
-          No habits yet. Add one above!
-        </p>
+        <p className="text-center text-gray-500">No habits yet. Add one above!</p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {habits.map((habit) => {
@@ -130,15 +142,16 @@ export default function Habit() {
               100
             );
 
+            const today = new Date().toISOString().split("T")[0];
+            const doneToday = habit.completed_days?.includes(today);
+
             return (
               <div
                 key={habit.id}
                 className="rounded-xl shadow-lg bg-white p-6 flex flex-col justify-between"
               >
                 <div className="flex justify-between items-center mb-4">
-                  <h2 className="font-semibold text-lg text-purple-700">
-                    {habit.habit_name}
-                  </h2>
+                  <h2 className="font-semibold text-lg text-purple-700">{habit.habit_name}</h2>
                   <button
                     onClick={() => deleteHabit(habit.id)}
                     className="text-red-500 font-bold px-2 py-1 rounded border border-red-500 hover:bg-red-100"
@@ -147,36 +160,25 @@ export default function Habit() {
                   </button>
                 </div>
 
-                <p className="text-green-600 font-semibold mb-2">
-                  🔥 Streak: {streak} days
-                </p>
+                <p className="text-green-600 font-semibold mb-2">🔥 Streak: {streak} days</p>
 
                 <div className="w-full bg-gray-200 h-3 rounded mb-2">
-                  <div
-                    className="bg-purple-500 h-3 rounded"
-                    style={{ width: `${progressPercent}%` }}
-                  ></div>
+                  <div className="bg-purple-500 h-3 rounded" style={{ width: `${progressPercent}%` }} />
                 </div>
+
                 <p className="text-sm text-gray-500 mb-4">
-                  {habit.completed_days?.length || 0} / {totalDays} days
-                  completed
+                  {habit.completed_days?.length || 0} / {totalDays} days completed
                 </p>
 
                 <button
                   onClick={() => toggleCompletion(habit)}
                   className={`mt-auto w-full py-2 rounded-lg font-medium ${
-                    habit.completed_days?.includes(
-                      new Date().toISOString().split("T")[0]
-                    )
+                    doneToday
                       ? "bg-green-500 text-white"
                       : "bg-purple-200 hover:bg-purple-300 text-purple-800"
                   }`}
                 >
-                  {habit.completed_days?.includes(
-                    new Date().toISOString().split("T")[0]
-                  )
-                    ? "Done Today"
-                    : "Mark Today"}
+                  {doneToday ? "Done Today" : "Mark Today"}
                 </button>
               </div>
             );

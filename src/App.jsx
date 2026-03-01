@@ -16,35 +16,34 @@ import JournalList from "./Pages/JournalList";
 import JournalDetail from "./Pages/JournalDetail";
 import TodoPage from "./Pages/Todo";
 import Dashboard from "./Pages/Dashboard";
-
+import LayoutWithHeader from "./Components/LayoutHeader";
 import ProtectedRoute from "./Pages/ProtectedRoute";
 
 const App = () => {
   return (
     <div>
       <Toaster position="top-right" reverseOrder={false} />
-      <Header />
-
       <Routes>
-        {/* Public Routes */}
-        <Route path="/" element={<Login />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/upload" element={<TextEditor />} />
-        <Route path="/journal" element={<JournalPage />} />
-        <Route path="/home" element={<Home />} />
+  {/* Public Routes */}
+  <Route path="/" element={<Login />} />
+  <Route path="/signup" element={<SignUp />} />
 
-        {/* Protected Routes */}
-        <Route element={<ProtectedRoute><Outlet /></ProtectedRoute>}>
-          <Route path="/calendar" element={<Calendar />} />
-          <Route path="/mood" element={<MoodTracker />} />
-          <Route path="/habit" element={<Habit />} />
-          <Route path="/goals" element={<Goals />} />
-          <Route path="/journals" element={<JournalList />} />
-          <Route path="/journal/:id" element={<JournalDetail />} />
-          <Route path="/todo" element={<TodoPage />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-        </Route>
-      </Routes>
+  {/* Routes with Header */}
+  <Route path="/home" element={<LayoutWithHeader><Home /></LayoutWithHeader>} />
+  <Route path="/journal" element={<LayoutWithHeader><JournalPage /></LayoutWithHeader>} />
+
+  {/* Protected Routes */}
+  <Route element={<ProtectedRoute><Outlet /></ProtectedRoute>}>
+    <Route path="/calendar" element={<LayoutWithHeader><Calendar /></LayoutWithHeader>} />
+    <Route path="/mood" element={<LayoutWithHeader><MoodTracker /></LayoutWithHeader>} />
+    <Route path="/habit" element={<LayoutWithHeader><Habit /></LayoutWithHeader>} />
+    <Route path="/goals" element={<LayoutWithHeader><Goals /></LayoutWithHeader>} />
+    <Route path="/journals" element={<LayoutWithHeader><JournalList /></LayoutWithHeader>} />
+    <Route path="/journal/:id" element={<LayoutWithHeader><JournalDetail /></LayoutWithHeader>} />
+    <Route path="/todo" element={<LayoutWithHeader><TodoPage /></LayoutWithHeader>} />
+    <Route path="/dashboard" element={<LayoutWithHeader><Dashboard /></LayoutWithHeader>} />
+  </Route>
+</Routes>
     </div>
   );
 };
