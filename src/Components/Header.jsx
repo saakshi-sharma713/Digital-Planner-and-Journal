@@ -1,14 +1,9 @@
 // src/Components/Home/Header.jsx
 import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { UserContext } from "../ContextApi/DataContext";
 
-// 🔥 Safe import: only if DataContext exists
-let UserContext;
-try {
-  UserContext = require("../ContextApi/DataContext").UserContext;
-} catch (e) {
-  UserContext = null;
-}
+
 
 const Header = () => {
   const [open, setOpen] = useState(false);
