@@ -1,11 +1,8 @@
 import React from "react";
 import { Routes, Route, Outlet } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
-
-import Header from "./Components/Home/Header";
 import Login from "./Pages/Login";
 import SignUp from "./Pages/SignUp";
-import TextEditor from "./Components/Journal/TextEditor";
 import JournalPage from "./Pages/Journal";
 import Home from "./Pages/Home";
 import Calendar from "./Pages/Calendar";
