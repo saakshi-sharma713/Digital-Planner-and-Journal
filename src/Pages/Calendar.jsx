@@ -17,7 +17,7 @@ export default function Calendar() {
   // Fetch events from backend
   const fetchEvents = async () => {
     try {
-      const res = await axios.get(`http://localhost:8990/calendar`, {
+      const res = await axios.get(`${API}/calendar`, {
         params: { user_id: token }, // Replace with user ID if needed
         headers: {
           Authorization: `Bearer ${token}`,
@@ -52,7 +52,7 @@ export default function Calendar() {
 
     try {
    const response =   await axios.post(
-        `http://localhost:8990/calendar/add`,
+        `${API}/calendar/add`,
         {
           title,
           start_datetime:date,
