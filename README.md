@@ -59,6 +59,7 @@ This is the **React frontend** for the Productivity App, a full-featured product
 ## Landing page
 <img width="1913" height="981" alt="image" src="https://github.com/user-attachments/assets/3a8f6b31-29ec-4553-87f5-3a61922bfae2" />
 
+
 <img width="1880" height="923" alt="image" src="https://github.com/user-attachments/assets/21012726-238c-49e0-9011-1bd96b2a6383" />
 
 ## Dashboard
@@ -66,6 +67,7 @@ This is the **React frontend** for the Productivity App, a full-featured product
 
 ## Video 
 https://drive.google.com/file/d/1-nEFV3vFLkKwAyp_t4UWeSB4-7n4YCEm/view?usp=sharing
+
 ## 🔗 Backend Repository
 This frontend connects with the backend API hosted in a separate repository:
 
