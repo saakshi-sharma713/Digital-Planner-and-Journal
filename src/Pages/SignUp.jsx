@@ -29,7 +29,7 @@ const API = import.meta.env.VITE_URL;
                 // Save token & name to localStorage
                 localStorage.setItem("token", result.data.token);
                 localStorage.setItem("name", result.data.name);
-
+                toast.success("SignUp Successfull !")
                 navigate("/"); // redirect to home
             } else {
                 toast.error(result.data.message || "Signup failed");
