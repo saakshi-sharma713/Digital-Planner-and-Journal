@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 // 🔥 Safe import: only if DataContext exists
 let UserContext;
 try {
-  UserContext = require("../../ContextApi/DataContext").UserContext;
+  UserContext = require("../ContextApi/DataContext").UserContext;
 } catch (e) {
   UserContext = null;
 }

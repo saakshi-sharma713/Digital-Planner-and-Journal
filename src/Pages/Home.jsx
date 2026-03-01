@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import Calendar from "./Calendar";
 import myImage from "../Images/image.png";
 import { Link } from "react-router-dom";
-import Header from "../Components/Home/Header";
+import Header from "../Components/Header";
 export default function LandingPage() {
   const name =localStorage.getItem("name")
   console.log(name)

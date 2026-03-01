@@ -1,6 +1,6 @@
 // LayoutWithHeader.jsx
 import React from "react";
-import Header from "./Home/Header";
+import Header from "./Header";
 
 const LayoutWithHeader = ({ children }) => {
   return (
