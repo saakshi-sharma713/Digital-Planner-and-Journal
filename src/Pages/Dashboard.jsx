@@ -99,7 +99,7 @@ export default function Dashboard() {
                   style={{
                     width: `${goal.progress}%`,
                     background:
-                      "linear-gradient(to right, #ff0000, #ff7f00, #ffff00)",
+                      "#ed7851",
                   }}
                 />
               </div>

@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import MoodTrendChart from "../Components/MoodChart";
-import Loader from "../Components/Loader"; // ✅ added
+import Loader from "../Components/Loader";
 import { UserContext } from "../ContextApi/DataContext";
 
 const moodsList = [
   { emoji: "😄", label: "Happy", color: "#FFD700", value: 5 },
-  { emoji: "😔", label: "Sad", color: "#1E90FF", value: 4, },
+  { emoji: "😔", label: "Sad", color: "#1E90FF", value: 4 },
   { emoji: "😐", label: "Neutral", color: "#A9A9A9", value: 3 },
   { emoji: "😡", label: "Angry", color: "#FF4500", value: 2 },
   { emoji: "😰", label: "Anxious", color: "#8A2BE2", value: 1 },
@@ -15,14 +15,13 @@ const moodsList = [
 export default function MoodTrackerDailyChart() {
   const { moods, setMoods } = useContext(UserContext);
   const [note, setNote] = useState("");
-  const [loading, setLoading] = useState(false); // ✅ added
+  const [loading, setLoading] = useState(true); // ✅ start as true only for page load
 
   const token = localStorage.getItem("token");
   const API = import.meta.env.VITE_URL;
 
   const fetchMoods = async () => {
     try {
-      setLoading(true); // ✅ start loader
       const response = await axios.get(`${API}/mood`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -33,12 +32,13 @@ export default function MoodTrackerDailyChart() {
     } catch (err) {
       console.error(err);
     } finally {
-      setLoading(false); // ✅ stop loader
+      setLoading(false); // ✅ stop loader only after initial fetch
     }
   };
 
   useEffect(() => {
     fetchMoods();
+    // eslint-disable-next-line
   }, []);
 
   const addMood = async (mood) => {
@@ -52,36 +52,29 @@ export default function MoodTrackerDailyChart() {
     };
 
     try {
-      setLoading(true); // ✅ loader
       await axios.post(`${API}/mood/add`, moodData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       });
-
       setNote("");
-      fetchMoods();
+      fetchMoods(); // ✅ fetch again but without changing the loader
     } catch (err) {
       console.error(err);
-    } finally {
-      setLoading(false);
     }
   };
 
   const deleteMood = async (id) => {
     try {
-      setLoading(true); // ✅ loader
       await axios.delete(`${API}/mood/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      fetchMoods();
+      fetchMoods(); // ✅ fetch again without showing loader
     } catch (err) {
       console.error(err);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -91,71 +84,73 @@ export default function MoodTrackerDailyChart() {
         🎉 Daily Mood Tracker 🎉
       </h1>
 
-      {/* ✅ Loader */}
-      {loading && (
+      {/* ✅ Loader only on initial page load */}
+      {loading ? (
         <div className="flex justify-center mb-6">
           <Loader />
         </div>
-      )}
-
-      {/* Mood Buttons */}
-      <div className="flex justify-center flex-wrap gap-4 mb-8">
-        {moodsList.map((m, i) => (
-          <button
-            key={i}
-            onClick={() => addMood(m)}
-            className="text-3xl p-4 rounded-full shadow-md hover:scale-110 transition-transform"
-            style={{ backgroundColor: m.color, color: "#fff" }}
-          >
-            {m.emoji}
-          </button>
-        ))}
-      </div>
-
-      {/* Note Input */}
-      <div className="flex justify-center mb-8">
-        <input
-          type="text"
-          placeholder="Add your emotion..."
-          value={note}
-          onChange={(e) => setNote(e.target.value)}
-          className="w-full max-w-md px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
-        />
-      </div>
-
-      {/* History + Chart */}
-      <div className="flex flex-col md:flex-row gap-6">
-        {/* History */}
-        <div className="flex-1 bg-white p-6 rounded-lg shadow-md overflow-y-auto">
-          <h2 className="text-xl font-bold mb-4">📖 Mood History</h2>
-          <ul className="list-none p-0">
-            {moods.map((m, i) => (
-              <li
+      ) : (
+        <>
+          {/* Mood Buttons */}
+          <div className="flex justify-center flex-wrap gap-4 mb-8">
+            {moodsList.map((m, i) => (
+              <button
                 key={i}
-                className="flex justify-between items-center p-3 mb-2 rounded-lg shadow-sm"
-                style={{ backgroundColor: m.color + "33" }}
+                onClick={() => addMood(m)}
+                className="text-3xl p-4 rounded-full shadow-md hover:scale-110 transition-transform"
+                style={{ backgroundColor: m.color, color: "#fff" }}
               >
-                <div className="text-lg">
-                  {m.mood_emoji} {m.mood_label} {m.note && `- ${m.note}`}
-                  <span className="text-xs text-gray-600"> ({m.date})</span>
-                </div>
-                <button
-                  onClick={() => deleteMood(m.id)}
-                  className="ml-2 text-white px-2 py-1 rounded"
-                >
-                  ❌
-                </button>
-              </li>
+                {m.emoji}
+              </button>
             ))}
-          </ul>
-        </div>
+          </div>
 
-        {/* Chart */}
-        <div className="flex-1 bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-xl font-bold mb-4">📊 Mood Trend</h2>
-          <MoodTrendChart data={moods} />
-        </div>
-      </div>
+          {/* Note Input */}
+          <div className="flex justify-center mb-8">
+            <input
+              type="text"
+              placeholder="Add your emotion..."
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              className="w-full max-w-md px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
+            />
+          </div>
+
+          {/* History + Chart */}
+          <div className="flex flex-col md:flex-row gap-6">
+            {/* History */}
+            <div className="flex-1 bg-white p-6 rounded-lg shadow-md overflow-y-auto">
+              <h2 className="text-xl font-bold mb-4">📖 Mood History</h2>
+              <ul className="list-none p-0">
+                {moods.map((m, i) => (
+                  <li
+                    key={i}
+                    className="flex justify-between items-center p-3 mb-2 rounded-lg shadow-sm"
+                    style={{ backgroundColor: m.color + "33" }}
+                  >
+                    <div className="text-lg">
+                      {m.mood_emoji} {m.mood_label} {m.note && `- ${m.note}`}
+                      
+                    </div>
+                    <button
+                      onClick={() => deleteMood(m.id)}
+                      className="ml-2 text-white px-2 py-1 rounded"
+                    >
+                      ❌
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Chart */}
+            <div className="flex-1 bg-white p-6 rounded-lg shadow-md">
+              <h2 className="text-xl font-bold mb-4">📊 Mood Trend</h2>
+              <MoodTrendChart data={moods} />
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }

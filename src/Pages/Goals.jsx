@@ -12,12 +12,11 @@ export default function Goals() {
   const [newGoal, setNewGoal] = useState("");
   const [category, setCategory] = useState("Select Category");
   const [targetDate, setTargetDate] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true); // ✅ start loader for initial page load
   const token = localStorage.getItem("token");
 
   // Fetch goals
   const fetchGoals = async () => {
-    setLoading(true);
     try {
       const res = await axios.get(`${API}/goals`, {
         headers: {
@@ -28,8 +27,9 @@ export default function Goals() {
       setGoals(res.data);
     } catch (err) {
       console.error(err);
+    } finally {
+      setLoading(false); // ✅ stop loader after first fetch
     }
-    setLoading(false);
   };
 
   useEffect(() => {
@@ -51,7 +51,7 @@ export default function Goals() {
       setNewGoal("");
       setCategory("Select Category");
       setTargetDate("");
-      fetchGoals();
+      fetchGoals(); // ✅ fetch again but without showing loader
     } catch (err) {
       console.error(err);
     }
@@ -72,17 +72,17 @@ export default function Goals() {
 
   // Delete goal
   const deleteGoal = async (id) => {
-    await axios.delete(`${API}/goals/${id}`);
-    fetchGoals();
+    try {
+      await axios.delete(`${API}/goals/${id}`);
+      fetchGoals(); // ✅ fetch again without showing loader
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
-
     <div className="min-h-screen bg-pink-200 flex flex-col items-center py-10">
-    
-      <h1 className="text-5xl font-bold mb-6 ">
-        🎯 Goals List
-      </h1>
+      <h1 className="text-5xl font-bold mb-6 ">🎯 Goals List</h1>
 
       {/* Input Bar */}
       <div className="w-full max-w-3xl bg-white rounded-xl shadow-md p-6 mb-10">
@@ -112,7 +112,7 @@ export default function Goals() {
           />
           <button
             onClick={addGoal}
-            className="bg-mint-500 hover:bg-mint-600  px-6 py-2 rounded transition"
+            className="bg-mint-500 hover:bg-mint-600 px-6 py-2 rounded transition"
           >
             ➕ Add
           </button>
@@ -122,7 +122,7 @@ export default function Goals() {
       {/* Goals as Cards */}
       <div className="w-full max-w-3xl grid md:grid-cols-2 gap-6">
         {loading ? (
-              <Loader/> 
+          <Loader /> // ✅ only shows on initial page load
         ) : goals.length === 0 ? (
           <p className="text-center text-gray-500 italic mt-6">
             🚀 No goals yet — start by adding one above!
