@@ -12,7 +12,7 @@ export default function LandingPage() {
       {/* ================= HEADER ================= */}
   
       {/* ================= HERO ================= */}
-      <section className="text-center py-24 bg-gradient-to-r from-sky-100 to-blue-100">
+      <section className="flex flex-col items-center justify-center gap-2 text-center py-20 font-handwriting  bg-gradient-to-r from-sky-100 to-blue-100">
         <h2 className="text-5xl font-bold text-gray-800">
           Organize Your Life ✨
         </h2>
@@ -76,8 +76,8 @@ export default function LandingPage() {
       {/* ================= CALENDAR PREVIEW ================= */}
      
 
-<section id="calendar" className="py-20 bg-sky-50 text-center flex mb-20">
-        <h2 className="text-5xl font-bold mb-10">
+<section id="calendar" className="py-20 bg-sky-50 text-center flex mb-20 ">
+        <h2 className="text-2xl md:text-5xl font-bold mb-10">
          Smart Calendar
         </h2>
 

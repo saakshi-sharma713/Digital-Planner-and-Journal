@@ -23,13 +23,13 @@ const Login = () => {
 
     try {
       const result = await axios.post(`${API}/user/login`, { email, password });
-      await new Promise((resolve) => setTimeout(resolve, 500)); // small delay for UX
+       
 
-      // 🔥 Store token & username in both context and localStorage
+      // Store token & username in both context and localStorage
       localStorage.setItem("token", result.data.token);
       localStorage.setItem("name", result.data.name);
 
-      setName(result.data.name);   // update header instantly
+      setName(result.data.name);   
       setToken(result.data.token);
      if(result.data.status){
       toast.success("Login Successful!");
@@ -54,14 +54,14 @@ const Login = () => {
       <Doodle2/>
       <Doodle3/>
 
-      <div className="relative md:top-[0] p-10 w-[90%] sm:w-[400px] rounded-xl shadow-xl transform rotate-[-2deg] bg-[#FFD700] font-handwriting z-10">
+      <div className="relative text-center md:top-[0] p-10 w-[90%] sm:w-[400px] rounded-xl shadow-xl transform rotate-[-2deg] bg-[#FFD700] font-handwriting z-10">
         <h2
           className="text-3xl font-bold mb-6 text-center font-caveat"
           style={{ fontFamily: 'Patrick Hand, cursive' }}
         >
           Login
         </h2>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className='text-center'>
           <input
             type="email"
             placeholder="Enter Username"
