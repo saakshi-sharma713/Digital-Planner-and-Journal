@@ -2,7 +2,6 @@ import React, { useContext } from "react";
 import Calendar from "./Calendar";
 import myImage from "../Images/image.png";
 import { Link } from "react-router-dom";
-import { UserContext } from "../ContextApi/DataContext";
 import Header from "../Components/Home/Header";
 export default function LandingPage() {
   const name =localStorage.getItem("name")
@@ -11,7 +10,7 @@ export default function LandingPage() {
     <div className="min-h-screen bg-white flex flex-col">
 
       {/* ================= HEADER ================= */}
-  
+  <Header/>
       {/* ================= HERO ================= */}
       <section className="text-center py-24 bg-gradient-to-r from-sky-100 to-blue-100">
         <h2 className="text-5xl font-bold text-gray-800">
