@@ -1,17 +1,15 @@
-import React, { useState } from "react";
-import GridLines from "../Components/GridLines";
-import Doodle1 from "../Components/Doodles/Doodle1";
-import Doodle2 from "../Components/Doodles/Doodle2";
-import Doodle3 from "../Components/Doodles/Doodle3";
+import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { UserContext } from "../ContextApi/DataContext";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPass] = useState("");
   const [login, setLogin] = useState(false);
 
+  const { setName } = useContext(UserContext); 
   const navigate = useNavigate();
   const API = import.meta.env.VITE_URL;
 
@@ -25,20 +23,24 @@ const Login = () => {
         password,
       });
 
-      localStorage.setItem("token", result.data.token);
-      localStorage.setItem("name", result.data.name);
+      const userName = result.data.name;
+      const token = result.data.token;
 
-      toast.success("Login Successful! 🎉");
+      localStorage.setItem("token", token);
+      localStorage.setItem("name", userName);
+
+      setName(userName); // 🔥 THIS IS THE FIX
+
+      toast.success("Login Successful!");
       navigate("/home");
+
     } catch (error) {
-      console.error("Login error:", error.response?.data || error.message);
-      toast.error(
-        error.response?.data?.message || "Login failed ❌"
-      );
+      toast.error("Login failed!");
     } finally {
       setLogin(false);
     }
   }
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-yellow-50 relative overflow-hidden">
