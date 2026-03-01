@@ -11,14 +11,15 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPass] = useState("");
   const [login,setlogin]= useState(false)
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+const API = import.meta.env.VITE_URL;
  async function handleSubmit(e){
     e.preventDefault();
     setlogin(true)
     try{
   
-   const result = await axios.post("http://localhost:8990/user/login",{email,password});
-       await new Promise((resolve) => setTimeout(resolve, 1200));
+   const result = await axios.post(`${API}/user/login`,{email,password});
+       await new Promise((resolve) => setTimeout(resolve, 1000));
    console.log(`Response from backend :`,result.data)
    localStorage.setItem("token",result.data.token)
     localStorage.setItem("name", result.data.name);

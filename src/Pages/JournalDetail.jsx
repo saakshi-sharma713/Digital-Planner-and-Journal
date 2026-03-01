@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import DOMPurify from "dompurify";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
+import Loader from "../Components/Loader";
 
 export default function JournalDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [journal, setJournal] = useState(null);
   const token = localStorage.getItem("token");
-  const API = "http://localhost:8990/journal";
+  const API = import.meta.env.VITE_URL;
 
   const fetchJournal = async () => {
     try {
-      const res = await axios.get(`${API}/${id}`, {
+      const res = await axios.get(`${API}/journal/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setJournal(res.data);
@@ -29,7 +30,7 @@ export default function JournalDetail() {
     if (!window.confirm("Delete this journal?")) return;
 
     try {
-      await axios.delete(`${API}/${id}`, {
+      await axios.delete(`${API}/journal/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -39,7 +40,7 @@ export default function JournalDetail() {
     }
   };
 
-  if (!journal) return <p>Loading...</p>;
+  if (!journal) return <Loader />;
 
   return (
     <div
@@ -48,14 +49,15 @@ export default function JournalDetail() {
         background: "#eaf4ff",
         display: "flex",
         justifyContent: "center",
-        padding: "50px",
+        padding: "20px",
       }}
     >
       <div
         style={{
           background: "white",
-          width: "700px",
-          padding: "50px",
+          width: "100%",
+          maxWidth: "900px",
+          padding: "clamp(20px, 5vw, 50px)",
           borderRadius: "12px",
           boxShadow: "0 15px 40px rgba(0,0,0,0.1)",
           fontFamily: "Georgia, serif",
@@ -68,7 +70,8 @@ export default function JournalDetail() {
           style={{
             textAlign: "right",
             color: "#4a6fa5",
-            marginBottom: "30px",
+            marginBottom: "20px",
+            fontSize: "clamp(12px, 2vw, 16px)",
           }}
         >
           {new Date(journal.created_at).toLocaleDateString()}
@@ -76,7 +79,10 @@ export default function JournalDetail() {
 
         {/* Content */}
         <div
-          style={{ fontSize: "18px" }}
+          style={{
+            fontSize: "clamp(14px, 2.5vw, 18px)",
+            wordBreak: "break-word",
+          }}
           dangerouslySetInnerHTML={{
             __html: DOMPurify.sanitize(journal.content),
           }}
@@ -94,7 +100,8 @@ export default function JournalDetail() {
                       alt="journal"
                       style={{
                         width: "100%",
-                        maxHeight: "400px",
+                        height: "auto",
+                        maxHeight: "500px",
                         objectFit: "cover",
                         borderRadius: "12px",
                         border: "3px solid #4a90e2",
@@ -108,6 +115,7 @@ export default function JournalDetail() {
                       controls
                       style={{
                         width: "100%",
+                        height: "auto",
                         borderRadius: "12px",
                         border: "3px solid #4a90e2",
                       }}
@@ -125,6 +133,7 @@ export default function JournalDetail() {
             textAlign: "right",
             color: "#4a6fa5",
             fontStyle: "italic",
+            fontSize: "clamp(14px, 2vw, 18px)",
           }}
         >
           — My Thoughts 💙
@@ -134,17 +143,37 @@ export default function JournalDetail() {
         <button
           onClick={deleteJournal}
           style={{
-            marginTop: "40px",
-            padding: "10px 25px",
+            marginTop: "30px",
+            padding: "12px 25px",
             background: "#4a90e2",
             color: "white",
             border: "none",
             borderRadius: "8px",
             cursor: "pointer",
-            fontSize: "16px",
+            fontSize: "clamp(14px, 2vw, 16px)",
+            width: "100%",
+            maxWidth: "250px",
           }}
         >
           Delete Journal 🗑️
+        </button>
+
+        <button
+          style={{
+            marginTop: "30px",
+            padding: "12px 25px",
+            background: "#4a90e2",
+            color: "white",
+            border: "none",
+            borderRadius: "8px",
+            cursor: "pointer",
+            fontSize: "clamp(14px, 2vw, 16px)",
+            width: "100%",
+            maxWidth: "250px",
+            marginLeft:"10px"
+          }}
+        >
+          <Link to="/journal">Back to List</Link> 
         </button>
       </div>
     </div>

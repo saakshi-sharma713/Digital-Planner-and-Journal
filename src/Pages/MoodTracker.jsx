@@ -1,40 +1,40 @@
-import React, { useEffect, useState } from "react";
-import { Line } from "react-chartjs-2";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-} from "chart.js";
-
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+import MoodTrendChart from "../Components/MoodChart";
+import Loader from "../Components/Loader"; // ✅ added
+import { UserContext } from "../ContextApi/DataContext";
 
 const moodsList = [
   { emoji: "😄", label: "Happy", color: "#FFD700", value: 5 },
-  { emoji: "😔", label: "Sad", color: "#1E90FF", value: 4 },
+  { emoji: "😔", label: "Sad", color: "#1E90FF", value: 4, },
   { emoji: "😐", label: "Neutral", color: "#A9A9A9", value: 3 },
   { emoji: "😡", label: "Angry", color: "#FF4500", value: 2 },
   { emoji: "😰", label: "Anxious", color: "#8A2BE2", value: 1 },
 ];
 
 export default function MoodTrackerDailyChart() {
-  const [moods, setMoods] = useState([]);
+  const { moods, setMoods } = useContext(UserContext);
   const [note, setNote] = useState("");
+  const [loading, setLoading] = useState(false); // ✅ added
+
   const token = localStorage.getItem("token");
+  const API = import.meta.env.VITE_URL;
 
   const fetchMoods = async () => {
-    const response = await axios.get("http://localhost:8990/mood", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
-    setMoods(response.data);
+    try {
+      setLoading(true); // ✅ start loader
+      const response = await axios.get(`${API}/mood`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      setMoods(response.data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false); // ✅ stop loader
+    }
   };
 
   useEffect(() => {
@@ -50,76 +50,53 @@ export default function MoodTrackerDailyChart() {
       note: note || "",
       date: today,
     };
+
     try {
-      const response = await axios.post("http://localhost:8990/mood/add", moodData, {
-        headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+      setLoading(true); // ✅ loader
+      await axios.post(`${API}/mood/add`, moodData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
       });
-      setMoods((prev) => [...prev, response.data]);
+
       setNote("");
       fetchMoods();
     } catch (err) {
       console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
   const deleteMood = async (id) => {
-    await axios.delete(`http://localhost:8990/mood/${id}`);
-    fetchMoods();
-  };
-
-  // Chart Data
-  const chartData = {
-    labels: moods.map((m) => new Date(m.created_at).toLocaleDateString()),
-    datasets: [
-      {
-        label: "Mood (Higher = Happier)",
-        data: moods.map((m) => m.mood_value),
-        borderColor: "#FF69B4",
-        backgroundColor: "#FFB6C1",
-        pointBackgroundColor: moods.map((m) => m.color),
-        tension: 0.3,
-        fill: false,
-      },
-    ],
-  };
-
-  // Chart Options
-  const options = {
-    responsive: true,
-    plugins: {
-      legend: { display: false },
-      title: { display: true, text: "Mood Over Days 📅", font: { size: 20 } },
-      tooltip: {
-        callbacks: {
-          label: function (context) {
-            const mood = moods[context.dataIndex];
-            return `${mood.mood_emoji} ${mood.mood_label}${mood.note ? ` - ${mood.note}` : ""}`;
-          },
+    try {
+      setLoading(true); // ✅ loader
+      await axios.delete(`${API}/mood/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-      },
-    },
-    scales: {
-      y: {
-        min: 0,
-        max: 5,
-        ticks: {
-          stepSize: 1,
-          callback: function (val) {
-            const mood = moodsList.find((m) => m.value === Math.round(val));
-            return mood ? mood.emoji : "";
-          },
-          font: { size: 20 },
-        },
-      },
-      x: {
-        ticks: { font: { size: 12 } },
-      },
-    },
+      });
+      fetchMoods();
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="p-8 bg-gradient-to-br from-mint-100 to-peach-100 min-h-screen">
-      <h1 className="mb-10 text-4xl font-bold text-indigo-700 text-center">🎉 Daily Mood Tracker 🎉</h1>
+      <h1 className="mb-10 text-4xl font-bold text-indigo-700 text-center">
+        🎉 Daily Mood Tracker 🎉
+      </h1>
+
+      {/* ✅ Loader */}
+      {loading && (
+        <div className="flex justify-center mb-6">
+          <Loader />
+        </div>
+      )}
 
       {/* Mood Buttons */}
       <div className="flex justify-center flex-wrap gap-4 mb-8">
@@ -146,7 +123,7 @@ export default function MoodTrackerDailyChart() {
         />
       </div>
 
-      {/* Mood History & Chart */}
+      {/* History + Chart */}
       <div className="flex flex-col md:flex-row gap-6">
         {/* History */}
         <div className="flex-1 bg-white p-6 rounded-lg shadow-md overflow-y-auto">
@@ -159,12 +136,12 @@ export default function MoodTrackerDailyChart() {
                 style={{ backgroundColor: m.color + "33" }}
               >
                 <div className="text-lg">
-                  {m.mood_emoji} {m.mood_label} {m.note && `- ${m.note}`}{" "}
-                  <span className="text-xs text-gray-600">({m.date})</span>
+                  {m.mood_emoji} {m.mood_label} {m.note && `- ${m.note}`}
+                  <span className="text-xs text-gray-600"> ({m.date})</span>
                 </div>
                 <button
                   onClick={() => deleteMood(m.id)}
-                  className="ml-2 text-white px-2 py-1 rounded bg-red-500 hover:bg-red-600"
+                  className="ml-2 text-white px-2 py-1 rounded"
                 >
                   ❌
                 </button>
@@ -176,7 +153,7 @@ export default function MoodTrackerDailyChart() {
         {/* Chart */}
         <div className="flex-1 bg-white p-6 rounded-lg shadow-md">
           <h2 className="text-xl font-bold mb-4">📊 Mood Trend</h2>
-          <Line data={chartData} options={options} />
+          <MoodTrendChart data={moods} />
         </div>
       </div>
     </div>

@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import DOMPurify from "dompurify";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import Loader from "../Components/Loader";
-import { Link } from "react-router-dom";
+
 export default function JournalList() {
   const [journals, setJournals] = useState([]);
   const token = localStorage.getItem("token");
-  const API = "http://localhost:8990/journal";
+  const API = import.meta.env.VITE_URL;
   const navigate = useNavigate();
-  
+
   const fetchJournals = async () => {
     try {
-      const res = await axios.get(API, {
+      const res = await axios.get(`${API}/journal`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setJournals(res.data);
@@ -28,36 +28,53 @@ export default function JournalList() {
   return (
     <div
       style={{
-        padding: "40px",
+        padding: "20px",
         background: "#ccccea",
         minHeight: "100vh",
       }}
     >
-      
+      {/* Header */}
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "15px",
+          marginBottom: "30px",
+        }}
+      >
+        <h2
+          style={{
+            fontSize: "clamp(20px, 4vw, 28px)",
+            fontWeight: "bold",
+            color: "#333",
+            textAlign: "center",
+          }}
+        >
+          📝 Journals List
+        </h2>
 
-<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "30px" }}>
-  <h2 style={{ fontSize: "28px", fontWeight: "bold", color: "#333" }}>
-    📝 Journals List
-  </h2>
+        <div style={{ textAlign: "center" }}>
+          <Link to="/journal">
+            <button
+              style={{
+                padding: "10px 20px",
+                backgroundColor: "#8A2BE2",
+                color: "white",
+                border: "none",
+                borderRadius: "8px",
+                cursor: "pointer",
+                fontWeight: "bold",
+                width: "100%",
+                maxWidth: "260px",
+              }}
+            >
+              Back to Journal Editor
+            </button>
+          </Link>
+        </div>
+      </div>
 
-  <Link to="/journal">
-    <button
-      style={{
-        padding: "10px 20px",
-        backgroundColor: "#8A2BE2",
-        color: "white",
-        border: "none",
-        borderRadius: "8px",
-        cursor: "pointer",
-        fontWeight: "bold",
-      }}
-    >
-      Back to Journal Editor
-    </button>
-  </Link>
-</div>
-{
-    
+      {/* Cards */}
       <div
         style={{
           display: "flex",
@@ -70,8 +87,8 @@ export default function JournalList() {
           <div
             key={j.id}
             style={{
-              width: "280px",
-              height: "420px",
+              width: "100%",
+              maxWidth: "320px",
               background: "#fff",
               borderRadius: "16px",
               padding: "20px",
@@ -108,7 +125,8 @@ export default function JournalList() {
                         alt="journal"
                         style={{
                           width: "100%",
-                          height: "140px",
+                          height: "auto",
+                          maxHeight: "200px",
                           objectFit: "cover",
                           borderRadius: "10px",
                         }}
@@ -121,7 +139,8 @@ export default function JournalList() {
                         controls
                         style={{
                           width: "100%",
-                          height: "140px",
+                          height: "auto",
+                          maxHeight: "200px",
                           objectFit: "cover",
                           borderRadius: "10px",
                         }}
@@ -134,12 +153,14 @@ export default function JournalList() {
             <button
               onClick={() => navigate(`/journal/${j.journal_id}`)}
               style={{
-                padding: "8px",
+                marginTop: "15px",
+                padding: "10px",
                 borderRadius: "8px",
                 border: "none",
                 background: "#8A2BE2",
                 color: "white",
                 cursor: "pointer",
+                width: "100%",
               }}
             >
               Read More ✨
@@ -147,7 +168,6 @@ export default function JournalList() {
           </div>
         ))}
       </div>
-}
-    </div> 
+    </div>
   );
 }

@@ -12,8 +12,7 @@ export default function Journal(){
     const [file, setFile] = useState(null);
     const [notes, setNotes] = useState('');
     const [loading,setLoading] = useState(false)
-    
-
+  const API = import.meta.env.VITE_URL;
      const token = localStorage.getItem("token");
     // Custom toolbar with image & video options
     const modules = {
@@ -83,7 +82,7 @@ export default function Journal(){
       }
 
       const res = await axios.post(
-        "http://localhost:8990/journal/add",
+        `${API}/journal/add`,
         { content: notes, media: media ? [media] : [] },
         {
           headers: {

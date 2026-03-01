@@ -3,8 +3,9 @@ import axios from "axios";
 import Doodle1 from "../Components/Doodles/Doodle1";
 import Doodle3 from "../Components/Doodles/Doodle3";
 import Doodle2 from "../Components/Doodles/Doodle2";
+import Loader from "../Components/Loader";
 
-const API = "http://localhost:8990";
+const API = import.meta.env.VITE_URL;
 
 export default function Goals() {
   const [goals, setGoals] = useState([]);
@@ -91,12 +92,12 @@ export default function Goals() {
             placeholder="Goal name"
             value={newGoal}
             onChange={(e) => setNewGoal(e.target.value)}
-            className="border p-2 flex-1 rounded focus:ring-2 focus:ring-mint-400"
+            className=" flex-1 rounded focus:ring-2 focus:ring-mint-400"
           />
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            className="border p-2 rounded focus:ring-2 focus:ring-mint-400"
+            className=" rounded focus:ring-2 focus:ring-mint-400"
           >
             <option>Select Category</option>
             <option>Personal</option>
@@ -107,11 +108,11 @@ export default function Goals() {
             type="date"
             value={targetDate}
             onChange={(e) => setTargetDate(e.target.value)}
-            className="border p-2 rounded focus:ring-2 focus:ring-mint-400"
+            className=" rounded focus:ring-2 focus:ring-mint-400"
           />
           <button
             onClick={addGoal}
-            className="bg-mint-500 hover:bg-mint-600 text-white px-6 py-2 rounded transition"
+            className="bg-mint-500 hover:bg-mint-600  px-6 py-2 rounded transition"
           >
             ➕ Add
           </button>
@@ -121,7 +122,7 @@ export default function Goals() {
       {/* Goals as Cards */}
       <div className="w-full max-w-3xl grid md:grid-cols-2 gap-6">
         {loading ? (
-          <p className="text-center text-gray-500">Loading goals...</p>
+              <Loader/> 
         ) : goals.length === 0 ? (
           <p className="text-center text-gray-500 italic mt-6">
             🚀 No goals yet — start by adding one above!

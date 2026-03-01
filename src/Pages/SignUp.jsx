@@ -11,12 +11,12 @@ const SignUp = () => {
     const [email, setEmail] = useState("");
     const [pass, setPass] = useState("");
     const navigate = useNavigate();
-
+const API = import.meta.env.VITE_URL;
     async function handleSubmit(e) {
         e.preventDefault(); // prevent default first
         try {
             // Call signup endpoint
-            const result = await axios.post("http://localhost:8990/user/signup", {
+            const result = await axios.post(`${API}/user/signup`, {
                 name,
                 email,
                 password: pass

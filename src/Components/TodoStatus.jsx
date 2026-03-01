@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-
-const API = "http://localhost:8990/todo";
+const API = import.meta.env.VITE_URL;
 
 export default function TodoAnalyticsTable() {
   const [todos, setTodos] = useState([]);
@@ -13,7 +12,7 @@ export default function TodoAnalyticsTable() {
 
   const fetchTodos = async () => {
     try {
-      const res = await axios.get(API, {
+      const res = await axios.get(`${API}/todo`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setTodos(res.data || []);

@@ -1,12 +1,10 @@
-
-
-
 // TodoPage.jsx
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import TodoCard from "../Components/TodoCard";
+import Loader from "../Components/Loader"; // ✅ added
 
-const API = "http://localhost:8990/todo";
+const API = import.meta.env.VITE_URL;
 
 export default function TodoPage() {
   const [todos, setTodos] = useState([]);
@@ -31,8 +29,9 @@ export default function TodoPage() {
     if (!token) return;
     try {
       setLoading(true);
-      const res = await axios.get(`${API}`, authHeader);
+      const res = await axios.get(`${API}/todo`, authHeader);
       setTodos(res.data || []);
+      console.log(res.data);
     } catch (err) {
       console.log(err.response?.data || err.message);
     } finally {
@@ -50,7 +49,7 @@ export default function TodoPage() {
     try {
       setLoading(true);
       await axios.post(
-        `${API}/add`,
+        `${API}/todo/add`,
         {
           title,
           priority: filters.priority,
@@ -71,7 +70,7 @@ export default function TodoPage() {
   const toggleTodo = async (todo) => {
     try {
       setLoading(true);
-      await axios.put(`${API}/update/${todo.id}`, {
+      await axios.put(`${API}/todo/update/${todo.id}`, {
         title: todo.title,
         status: !todo.status,
       });
@@ -86,7 +85,7 @@ export default function TodoPage() {
   const deleteTodo = async (id) => {
     try {
       setLoading(true);
-      await axios.delete(`${API}/delete/${id}`, authHeader);
+      await axios.delete(`${API}/todo/delete/${id}`, authHeader);
       fetchTodos();
     } catch (err) {
       console.log(err.response?.data || err.message);
@@ -98,7 +97,7 @@ export default function TodoPage() {
   const searchTodos = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(`${API}/search`, {
+      const res = await axios.get(`${API}/todo/search`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -113,7 +112,6 @@ export default function TodoPage() {
     }
   };
 
-  // helper to style todos by priority + status
   const getTodoClasses = (todo) => {
     if (todo.status) {
       return "bg-green-100 border-green-300";
@@ -130,7 +128,6 @@ export default function TodoPage() {
     }
   };
 
-  // helper for badge style
   const getPriorityBadge = (priority) => {
     switch (priority) {
       case "high":
@@ -146,12 +143,17 @@ export default function TodoPage() {
 
   return (
     <div className="min-h-screen bg-[#AAD0F1] p-6 md:p-12 font-sans">
-      {/* HEADER */}
       <h2 className="text-4xl md:text-5xl font-bold text-center mb-8">
         My Todos
       </h2>
 
-      {/* INPUT + FILTERS + BUTTONS */}
+      {/* ✅ Loader Added Here */}
+      {loading && (
+        <div className="flex justify-center my-6">
+          <Loader />
+        </div>
+      )}
+
       <form
         onSubmit={addTodo}
         className="flex flex-col md:flex-row items-center gap-4 mb-8 bg-white p-4 rounded-lg shadow-md"
@@ -165,7 +167,9 @@ export default function TodoPage() {
         />
 
         <select
-          onChange={(e) => setFilters({ ...filters, priority: e.target.value })}
+          onChange={(e) =>
+            setFilters({ ...filters, priority: e.target.value })
+          }
           className="w-full md:w-auto p-3 rounded-lg border border-blue-200 bg-white cursor-pointer"
         >
           <option value="">Priority</option>
@@ -189,6 +193,7 @@ export default function TodoPage() {
         >
           Add
         </button>
+
         <button
           type="button"
           onClick={searchTodos}
@@ -196,6 +201,7 @@ export default function TodoPage() {
         >
           Search
         </button>
+
         <button
           type="button"
           onClick={fetchTodos}
@@ -205,9 +211,7 @@ export default function TodoPage() {
         </button>
       </form>
 
-      {/* TASKS */}
       <div className="flex flex-col md:flex-row gap-6">
-        {/* Personal Tasks */}
         <div className="flex-1 bg-white p-6 rounded-xl shadow-md">
           <h3 className="text-blue-700 font-bold mb-4">Personal Tasks</h3>
           {todos
@@ -224,7 +228,6 @@ export default function TodoPage() {
             ))}
         </div>
 
-        {/* Work Tasks */}
         <div className="flex-1 bg-white p-6 rounded-xl shadow-md">
           <h3 className="text-blue-800 font-bold mb-4">Work Tasks</h3>
           {todos

@@ -70,7 +70,9 @@ const Header = () => {
       <Link to="/home" className="hover:text-sky-400 w-full">Home</Link>
       <Link to="/journal" className="hover:text-sky-400 w-full">Journal</Link>
       <Link to="/todo" className="hover:text-sky-400 w-full">Todo</Link>
-      <Link to="/contact" className="hover:text-sky-400 w-full">Contact</Link>
+      <Link to="/goals" className="hover:text-sky-400">Goals</Link>
+      <Link to="/habit" className="hover:text-sky-400">Habit</Link>
+        <Link to="/dashboard" className="hover:text-sky-400">Dashboard</Link>
       <Link
         to="/journal"
         className="bg-sky-400 text-white px-4 py-2 rounded-md hover:bg-sky-500 transition text-center w-full"

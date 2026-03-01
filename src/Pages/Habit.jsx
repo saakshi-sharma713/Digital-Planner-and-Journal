@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import Loader from "../Components/Loader";
 
-const API = "http://localhost:8990";
+const API = import.meta.env.VITE_URL;
 
 export default function Habit() {
   const [habits, setHabits] = useState([]);
@@ -98,7 +99,7 @@ export default function Habit() {
           placeholder="Add new habit"
           value={newHabit}
           onChange={(e) => setNewHabit(e.target.value)}
-          className="border p-2 flex-1 rounded bg-white shadow-sm"
+          className="p-4 flex-1 rounded bg-white shadow-sm"
         />
         <button
           onClick={addHabit}
@@ -114,7 +115,7 @@ export default function Habit() {
       </div>
 
       {loading ? (
-        <p className="text-center text-gray-500">Loading habits...</p>
+       <Loader/>
       ) : habits.length === 0 ? (
         <p className="text-center text-gray-500">
           No habits yet. Add one above!

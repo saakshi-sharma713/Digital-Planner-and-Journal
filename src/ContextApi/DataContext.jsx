@@ -6,8 +6,9 @@ import toast from "react-hot-toast";
 export const UserContext = createContext();
 
 const DataContext = ({ children }) => {
+  const [moods, setMoods] = useState([]);
   const navigate = useNavigate();
-
+  const BACKEND_URL = import.meta.env.VITE_URL;
   const [name, setName] = useState("");
   const [token, setToken] = useState("");
 
@@ -47,7 +48,7 @@ const DataContext = ({ children }) => {
   }
 
   return (
-    <UserContext.Provider value={{ name, token, setName }}>
+    <UserContext.Provider value={{ name, token, setName,BACKEND_URL,moods,setMoods }}>
       {children}
     </UserContext.Provider>
   );
