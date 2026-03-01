@@ -1,26 +1,32 @@
+// src/Components/Home/Header.jsx
 import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { UserContext } from "../../ContextApi/DataContext";
 
+// 🔥 Safe import: only if DataContext exists
+let UserContext;
+try {
+  UserContext = require("../../ContextApi/DataContext").UserContext;
+} catch (e) {
+  UserContext = null;
+}
 
 const Header = () => {
   const [open, setOpen] = useState(false);
-  const { name, setName } = useContext(UserContext);
+  const context = useContext(UserContext);
+  const name = context?.name || "";
+  const setName = context?.setName || (() => {});
   const navigate = useNavigate();
 
-  function handleLogout() {
+  const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("name");
-    setName("");   
+    setName("");
     navigate("/");
-  }
+  };
 
   return (
     <header className="relative flex justify-between items-center px-6 py-4 shadow-md bg-white w-full">
-      {/* Logo */}
-      <h1 className="text-2xl font-bold text-gray-800">
-      Productive App
-      </h1>
+      <h1 className="text-2xl font-bold text-gray-800">Productive App</h1>
 
       <div className="flex items-center gap-6">
         {/* Desktop Nav */}
@@ -35,7 +41,6 @@ const Header = () => {
           <Link to="/goals" className="hover:text-sky-400">Goals</Link>
         </nav>
 
-        {/* User Section */}
         {name ? (
           <div className="flex items-center gap-4">
             <span className="hidden md:block text-gray-700 font-semibold">
