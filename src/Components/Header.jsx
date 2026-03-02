@@ -9,7 +9,7 @@ const Header = () => {
   const [open, setOpen] = useState(false);
   const context = useContext(UserContext);
   const name = context?.name || "";
-  const setName = context?.setName || (() => {});
+  const setName = context?.setName || (() => { });
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -37,8 +37,8 @@ const Header = () => {
         </nav>
 
         {name ? (
-          <div className="flex items-center gap-4">
-            <span className="hidden md:block text-gray-700 font-semibold">
+          <div className="hidden md:flex items-center gap-4">
+            <span className="text-gray-700 font-semibold">
               Hi {name} 👋
             </span>
             <button
@@ -56,7 +56,6 @@ const Header = () => {
             Get Started
           </Link>
         )}
-
         {/* Hamburger */}
         <button
           className="md:hidden text-gray-800 text-2xl"
