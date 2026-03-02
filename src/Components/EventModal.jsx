@@ -1,87 +1,93 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
+import toast, { Toaster } from "react-hot-toast";
 import image from "../assets/image.png";
+
+const API = import.meta.env.VITE_URL;
+const token = localStorage.getItem("token");
+const userEmail = localStorage.getItem("email");
 
 const EditEventPage = ({ event, onSave, onCancel }) => {
   const [title, setTitle] = useState("");
   const [time, setTime] = useState("");
+  const [reminderSet, setReminderSet] = useState(false);
+  const [minutesLeft, setMinutesLeft] = useState(null);
 
   useEffect(() => {
-    if (event) {
-      setTitle(event.title);
-      setTime(event.time);
-    }
+    if (!event?.start) return;
+
+    const startTime = new Date(event.start);
+
+    const updateTimer = () => {
+      const now = new Date();
+      const diff = startTime - now;
+
+      if (diff <= 0) {
+        setMinutesLeft("Started");
+        return;
+      }
+
+      const totalMinutes = Math.floor(diff / 60000);
+      const hours = Math.floor(totalMinutes / 60);
+      const minutes = totalMinutes % 60;
+
+      setMinutesLeft(`${hours}h ${minutes}m`);
+    };
+
+    updateTimer(); // run immediately
+    const interval = setInterval(updateTimer, 60000); // update every 1 min
+
+    return () => clearInterval(interval);
   }, [event]);
-
-  if (!event) return null;
-
-  const handleSave = () => {
-    if (!title || !time) return alert("Title and time required");
-    onSave({ ...event, title, time });
-  };
-
-  // Format date as "Mar 12, 2026 | 2:30 PM"
-  const formattedDate = event.start
-    ? `${event.start.toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-        year: "numeric",
-      })} | ${event.start.toLocaleTimeString("en-US", {
-        hour: "numeric",
-        minute: "2-digit",
-        hour12: true,
-      })}`
-    : "";
-
   return (
-    <div className="min-h-screen flex-col items-center justify-center bg-gray-100 p-10">
-      <div className="flex flex-col justify-center items-center p-10">
-        <img
-          src={image}
-          width="80"
-          className="absolute z-1 left-155 top-25 drop-shadow-md rotate-[-10deg]"
-        />
+  <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
+    <div
+      className="w-[350px] sm:w-[400px] bg-white rounded-2xl shadow-2xl p-6"
+      style={{ backgroundColor: event?.backgroundColor }}
+    >
+      {/* Title */}
+      <h2 className="text-5xl font-bold mb-4 text-gray-800">
+        {event?.title}
+      </h2>
 
-        <div
-          className="relative p-10 rounded-2xl shadow-2xl w-[500px] rotate-[-2deg]"
-          style={{ backgroundColor: event.backgroundColor, fontFamily: "Caveat, cursive" }}
+      {/* Scheduled Time */}
+      <p className="text-sm text-gray-700 mb-2">
+        📅 {new Date(event.start).toLocaleDateString()}
+      </p>
+      <p className="text-sm text-gray-700 mb-4">
+        ⏰ {new Date(event.start).toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        })}
+      </p>
+
+      {/* Time Left */}
+      {minutesLeft && (
+        <p className="text-sm font-medium text-gray-800 mb-6">
+          {minutesLeft === "Started"
+            ? "⏰ Event started"
+            : `⏱ Event in ${minutesLeft}`}
+        </p>
+      )}
+
+      {/* Buttons */}
+      <div className="flex justify-end gap-3">
+        <button
+          onClick={() => onCancel("delete")}
+          className="px-4 py-2 text-sm bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
         >
-          <h2 className="text-3xl font-bold mb-6" style={{ fontFamily: "Patrick Hand, cursive" }}>
-            Edit Event
-          </h2>
+          Delete
+        </button>
 
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="Event Title"
-            className="w-full p-4 mb-6 rounded text-xl"
-            style={{ fontFamily: "Patrick Hand, cursive", backgroundColor: "white" }}
-          />
-
-          <h2>Scheduled on:</h2>
-          <p className="mb-6">{formattedDate}</p>
-
-          <div className="flex justify-end gap-4">
-           
-            <button
-              onClick={() => onCancel("delete")}
-              className="bg-red-500 text-white px-6 py-3 rounded hover:bg-red-600 text-lg"
-              style={{ fontFamily: "Patrick Hand, cursive" }}
-            >
-              Delete
-            </button>
-            <button
-              onClick={() => onCancel("close")}
-              className="bg-gray-700 text-white px-6 py-3 rounded hover:bg-gray-800 text-lg"
-              style={{ fontFamily: "Patrick Hand, cursive" }}
-            >
-              Close
-            </button>
-          </div>
-        </div>
+        <button
+          onClick={() => onCancel("close")}
+          className="px-4 py-2 text-sm bg-gray-700 text-white rounded-lg hover:bg-gray-800 transition"
+        >
+          Close
+        </button>
       </div>
     </div>
-  );
-};
-
+  </div>
+);
+}
 export default EditEventPage;

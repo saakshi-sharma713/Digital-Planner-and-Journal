@@ -6,7 +6,7 @@ import Doodle3 from '../Components/Doodles/Doodle3';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
-import { UserContext } from '../ContextApi/DataContext'; // 🔥 import context
+import { UserContext } from '../ContextApi/DataContext';
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -15,7 +15,7 @@ const Login = () => {
   const navigate = useNavigate();
   const API = import.meta.env.VITE_URL;
 
-  const { setName, setToken } = useContext(UserContext); // 🔥 get setters from context
+  const { setName, setToken } = useContext(UserContext); 
 
   async function handleSubmit(e) {
     e.preventDefault();

@@ -3,6 +3,7 @@ import Calendar from "./Calendar";
 import myImage from "../Images/image.png";
 import { Link } from "react-router-dom";
 import Header from "../Components/Header";
+import Hero from "../Components/Home/Hero";
 export default function LandingPage() {
   const name =localStorage.getItem("name")
   console.log(name)
@@ -12,23 +13,7 @@ export default function LandingPage() {
       {/* ================= HEADER ================= */}
   
       {/* ================= HERO ================= */}
-      <section className="flex flex-col items-center justify-center gap-2 text-center py-20 font-handwriting  bg-gradient-to-r from-sky-100 to-blue-100">
-        <h2 className="text-5xl font-bold text-gray-800">
-          Organize Your Life ✨
-        </h2>
-
-        <p className="mt-6 text-lg text-gray-600 max-w-2xl mx-auto">
-          Track your tasks, monitor your mood, and achieve your goals
-          all in one place.
-        </p>
-
-        <button className="mt-8 bg-sky-500 text-white px-6 py-3 rounded-lg text-lg hover:bg-sky-600">
-          <Link to="/dashboard">
-          
-          Start Tracking
-          </Link>
-        </button>
-      </section>
+     <Hero/>
 
 
       {/* ================= FEATURES ================= */}

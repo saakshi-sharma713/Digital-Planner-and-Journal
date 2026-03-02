@@ -121,7 +121,7 @@ export default function Dashboard() {
 function Card({ title, value }) {
   return (
     <div className="bg-white p-6 rounded-2xl shadow-lg text-center hover:scale-105 transition-transform">
-      <p className="text-[#ff6633] text-sm font-semibold tracking-wide">
+      <p className=" text-sm font-semibold tracking-wide">
         {title}
       </p>
       <h2 className="text-2xl sm:text-3xl font-extrabold mt-2">
@@ -134,7 +134,7 @@ function Card({ title, value }) {
 function ChartCard({ title, children }) {
   return (
     <div className="bg-white p-4 sm:p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all border border-[#ffc2ad]">
-      <h2 className="text-lg font-bold mb-4 text-[#ff6633]">
+      <h2 className="text-lg font-bold mb-4 ">
         {title}
       </h2>
       {children}

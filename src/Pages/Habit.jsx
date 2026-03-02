@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Loader from "../Components/Loader";
+import toast from "react-hot-toast";
 
 const API = import.meta.env.VITE_URL;
 
@@ -10,9 +11,9 @@ export default function Habit() {
   const [loading, setLoading] = useState(false);
   const token = localStorage.getItem("token");
 
-  // Fetch habits from backend
+  // Fetch habits
   const fetchHabits = async () => {
-    if (!token) return; // stop if token not found
+    if (!token) return;
     setLoading(true);
     try {
       const res = await axios.get(`${API}/habits`, {
@@ -20,7 +21,8 @@ export default function Habit() {
       });
       setHabits(res.data);
     } catch (err) {
-      console.error("Failed to fetch habits:", err);
+      console.error(err);
+      toast.error("⚠️ Failed to fetch habits");
     } finally {
       setLoading(false);
     }
@@ -30,36 +32,30 @@ export default function Habit() {
     fetchHabits();
   }, []);
 
-  // Add new habit
   const addHabit = async () => {
     if (!newHabit.trim()) return;
     try {
       await axios.post(
         `${API}/habits`,
         { habit_name: newHabit.trim() },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
       setNewHabit("");
       fetchHabits();
+      toast.success("✨ New habit added!");
     } catch (err) {
-      console.error("Failed to add habit:", err);
+      console.error(err);
+      toast.error("⚠️ Could not add habit");
     }
   };
 
-  // Toggle habit completion for today
   const toggleCompletion = async (habit) => {
     if (!token) return;
     const today = new Date().toISOString().split("T")[0];
     const updatedDays = habit.completed_days ? [...habit.completed_days] : [];
-
-    if (updatedDays.includes(today)) return; // already done
-
+    if (updatedDays.includes(today)) return;
     updatedDays.push(today);
+
     setHabits((prev) =>
       prev.map((h) => (h.id === habit.id ? { ...h, completed_days: updatedDays } : h))
     );
@@ -70,12 +66,13 @@ export default function Habit() {
         { completed_days: updatedDays },
         { headers: { Authorization: `Bearer ${token}` } }
       );
+      toast.success("🌟 Great job! Keep shining!");
     } catch (err) {
-      console.error("Failed to update habit:", err);
+      console.error(err);
+      toast.error("⚠️ Could not update habit");
     }
   };
 
-  // Delete a habit
   const deleteHabit = async (id) => {
     if (!token) return;
     try {
@@ -83,12 +80,13 @@ export default function Habit() {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchHabits();
+      toast.success("🗑 Habit deleted");
     } catch (err) {
-      console.error("Failed to delete habit:", err);
+      console.error(err);
+      toast.error("⚠️ Could not delete habit");
     }
   };
 
-  // Calculate streak (consecutive days)
   const calculateStreak = (completed_days) => {
     if (!completed_days || completed_days.length === 0) return 0;
     let streak = 0;
@@ -101,39 +99,42 @@ export default function Habit() {
   };
 
   return (
-    <div className="min-h-screen bg-purple-100 p-6">
-      <h1 className="text-3xl font-bold mb-6 text-center text-purple-800">
-        Habit Tracker
+    <div className="min-h-screen bg-purple-100 py-10 px-6">
+      <h1 className="text-4xl md:text-5xl font-bold text-center text-purple-800 mb-10">
+        🌈 Habit Tracker
       </h1>
 
-      {/* Add Habit */}
-      <div className="flex mb-6">
+      {/* Add Habit Bar */}
+      <div className="w-full max-w-6xl mx-auto flex flex-col md:flex-row gap-4 mb-12">
         <input
           type="text"
-          placeholder="Add new habit"
+          placeholder="Add new habit..."
           value={newHabit}
           onChange={(e) => setNewHabit(e.target.value)}
-          className="p-4 flex-1 rounded bg-white shadow-sm"
+          className="flex-1 bg-white p-4 rounded-lg shadow-sm border border-gray-300 focus:ring-2 focus:ring-purple-400"
         />
         <button
           onClick={addHabit}
           disabled={!newHabit.trim()}
-          className={`ml-2 px-4 rounded ${
+          className={`px-6 py-3 rounded-lg font-medium transition ${
             newHabit.trim()
               ? "bg-purple-500 text-white hover:bg-purple-600"
-              : "bg-gray-300 cursor-not-allowed"
+              : "bg-gray-300 text-gray-600 cursor-not-allowed"
           }`}
         >
-          Add
+          ➕ Add
         </button>
       </div>
 
+      {/* Habits Grid */}
       {loading ? (
         <Loader />
       ) : habits.length === 0 ? (
-        <p className="text-center text-gray-500">No habits yet. Add one above!</p>
+        <p className="text-center text-gray-500 italic mt-10">
+          🚀 No habits yet — start by adding one above!
+        </p>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="w-full max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {habits.map((habit) => {
             const streak = calculateStreak(habit.completed_days);
             const totalDays = 30;
@@ -141,44 +142,52 @@ export default function Habit() {
               ((habit.completed_days?.length || 0) / totalDays) * 100,
               100
             );
-
             const today = new Date().toISOString().split("T")[0];
             const doneToday = habit.completed_days?.includes(today);
 
             return (
               <div
                 key={habit.id}
-                className="rounded-xl shadow-lg bg-white p-6 flex flex-col justify-between"
+                className={`bg-white rounded-2xl shadow-lg p-6 flex flex-col justify-between transition hover:shadow-2xl hover:scale-[1.02] ${
+                  doneToday ? "bg-mint-50  border-mint-300" : "bg-white"
+                }`}
               >
                 <div className="flex justify-between items-center mb-4">
-                  <h2 className="font-semibold text-lg text-purple-700">{habit.habit_name}</h2>
+                  <h2 className="font-semibold text-2xl text-purple-700">
+                    {habit.habit_name}
+                  </h2>
                   <button
                     onClick={() => deleteHabit(habit.id)}
-                    className="text-red-500 font-bold px-2 py-1 rounded border border-red-500 hover:bg-red-100"
+                    className="text-red-500 font-bold px-2 py-1 rounded hover:bg-red-100"
                   >
-                    Delete
+                    ❌
                   </button>
                 </div>
 
-                <p className="text-green-600 font-semibold mb-2">🔥 Streak: {streak} days</p>
+                <span className="inline-block bg-peach-200 text-peach-800 text-sm font-semibold px-3 py-1 rounded-full mb-3">
+                  🔥 Streak: {streak} days
+                </span>
 
-                <div className="w-full bg-gray-200 h-3 rounded mb-2">
-                  <div className="bg-purple-500 h-3 rounded" style={{ width: `${progressPercent}%` }} />
+                <div className="w-full bg-gray-200 h-3 rounded mb-2 overflow-hidden">
+                  <div
+                    className="bg-purple-400 h-3 rounded transition-all duration-500"
+                    style={{ width: `${progressPercent}%` }}
+                  />
                 </div>
-
                 <p className="text-sm text-gray-500 mb-4">
                   {habit.completed_days?.length || 0} / {totalDays} days completed
                 </p>
 
                 <button
                   onClick={() => toggleCompletion(habit)}
-                  className={`mt-auto w-full py-2 rounded-lg font-medium ${
+                  disabled={doneToday}
+                  className={`mt-auto w-full py-2 rounded-lg font-medium transition ${
                     doneToday
-                      ? "bg-green-500 text-white"
-                      : "bg-purple-200 hover:bg-purple-300 text-purple-800"
+                      ? "bg-green-500 text-white cursor-not-allowed"
+                      : "bg-purple-500 hover:bg-purple-600 text-white"
                   }`}
                 >
-                  {doneToday ? "Done Today" : "Mark Today"}
+                  {doneToday ? "🎉 Done Today — Amazing!" : "Mark Today 💪"}
                 </button>
               </div>
             );

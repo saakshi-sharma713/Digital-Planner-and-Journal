@@ -20,7 +20,7 @@ const Header = () => {
   };
 
   return (
-    <header className="relative flex justify-between items-center px-6 py-4 shadow-md bg-white w-full">
+    <header className="relative z-50 flex justify-between items-center px-6 py-4 shadow-md bg-white w-full z-10">
       <h1 className="text-2xl font-bold text-gray-800">Productive App</h1>
 
       <div className="flex items-center gap-6">
@@ -68,7 +68,7 @@ const Header = () => {
 
       {/* Mobile Menu */}
       {open && (
-        <div className="absolute top-full left-0 w-full bg-white shadow-md flex flex-col gap-4 py-6 px-6 md:hidden">
+        <div className="absolute z-10 top-full left-0 w-full bg-white shadow-md flex flex-col gap-4 py-6 px-6 md:hidden">
           <Link to="/home">Home</Link>
           <Link to="/journal">Journal</Link>
           <Link to="/todo">Todo</Link>

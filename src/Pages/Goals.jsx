@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import Doodle1 from "../Components/Doodles/Doodle1";
-import Doodle3 from "../Components/Doodles/Doodle3";
-import Doodle2 from "../Components/Doodles/Doodle2";
 import Loader from "../Components/Loader";
 
 const API = import.meta.env.VITE_URL;
@@ -12,23 +9,19 @@ export default function Goals() {
   const [newGoal, setNewGoal] = useState("");
   const [category, setCategory] = useState("Select Category");
   const [targetDate, setTargetDate] = useState("");
-  const [loading, setLoading] = useState(true); // ✅ start loader for initial page load
+  const [loading, setLoading] = useState(true);
   const token = localStorage.getItem("token");
 
-  // Fetch goals
   const fetchGoals = async () => {
     try {
       const res = await axios.get(`${API}/goals`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
       setGoals(res.data);
     } catch (err) {
       console.error(err);
     } finally {
-      setLoading(false); // ✅ stop loader after first fetch
+      setLoading(false);
     }
   };
 
@@ -36,28 +29,22 @@ export default function Goals() {
     fetchGoals();
   }, []);
 
-  // Add goal
   const addGoal = async () => {
     if (!newGoal) return;
     try {
       const payload = { goal_name: newGoal, category, target_date: targetDate };
       const res = await axios.post(`${API}/goals/add`, payload, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
       setGoals((prev) => [...prev, res.data]);
       setNewGoal("");
       setCategory("Select Category");
       setTargetDate("");
-      fetchGoals(); // ✅ fetch again but without showing loader
     } catch (err) {
       console.error(err);
     }
   };
 
-  // Add progress +10%
   const addProgress = async (goal) => {
     const newProgress = Math.min((goal.progress || 0) + 10, 100);
     try {
@@ -70,34 +57,35 @@ export default function Goals() {
     }
   };
 
-  // Delete goal
   const deleteGoal = async (id) => {
     try {
       await axios.delete(`${API}/goals/${id}`);
-      fetchGoals(); // ✅ fetch again without showing loader
+      setGoals((prev) => prev.filter((g) => g.id !== id));
     } catch (err) {
       console.error(err);
     }
   };
 
   return (
-    <div className="min-h-screen bg-pink-200 flex flex-col items-center py-10">
-      <h1 className="text-5xl font-bold mb-6 ">🎯 Goals List</h1>
+    <div className="min-h-screen bg-green-200 flex flex-col items-center py-10 px-4 md:px-8 lg:px-20">
+      <h1 className="text-7xl md:text-8xl font-bold mb-8 text-center">
+        🎯 Goals List
+      </h1>
 
       {/* Input Bar */}
-      <div className="w-full max-w-3xl bg-white rounded-xl shadow-md p-6 mb-10">
-        <div className="flex flex-col md:flex-row gap-3">
+      <div className="w-full max-w-6xl bg-white rounded-xl shadow-md p-6 mb-12">
+        <div className="flex flex-col md:flex-row gap-4">
           <input
             type="text"
             placeholder="Goal name"
             value={newGoal}
             onChange={(e) => setNewGoal(e.target.value)}
-            className=" flex-1 rounded focus:ring-2 focus:ring-mint-400"
+            className="flex-1 rounded border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-green-400"
           />
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            className=" rounded focus:ring-2 focus:ring-mint-400"
+            className="rounded border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-green-400"
           >
             <option>Select Category</option>
             <option>Personal</option>
@@ -108,11 +96,11 @@ export default function Goals() {
             type="date"
             value={targetDate}
             onChange={(e) => setTargetDate(e.target.value)}
-            className=" rounded focus:ring-2 focus:ring-mint-400"
+            className="rounded border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-green-400"
           />
           <button
             onClick={addGoal}
-            className="bg-mint-500 hover:bg-mint-600 px-6 py-2 rounded transition"
+            className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded transition"
           >
             ➕ Add
           </button>
@@ -120,11 +108,11 @@ export default function Goals() {
       </div>
 
       {/* Goals as Cards */}
-      <div className="w-full max-w-3xl grid md:grid-cols-2 gap-6">
+      <div className="w-full max-w-6xl grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {loading ? (
-          <Loader /> // ✅ only shows on initial page load
+          <Loader />
         ) : goals.length === 0 ? (
-          <p className="text-center text-gray-500 italic mt-6">
+          <p className="text-center text-gray-500 italic mt-6 col-span-full">
             🚀 No goals yet — start by adding one above!
           </p>
         ) : (
@@ -155,17 +143,16 @@ export default function Goals() {
               </div>
               <p className="text-sm text-gray-600">{goal.progress}% completed</p>
 
-              {/* Progress Button */}
               <button
                 onClick={() => addProgress(goal)}
                 disabled={goal.progress === 100}
-                className={`mt-3 px-4 py-2 rounded-lg transition ${
+                className={`mt-3 px-4 py-2 rounded-lg transition w-full text-center ${
                   goal.progress === 100
                     ? "bg-gray-300 text-gray-700 cursor-not-allowed"
                     : "bg-green-500 hover:bg-green-600 text-white"
                 }`}
               >
-                {goal.progress === 100 ? "✅ Completed" : " Add Progress"}
+                {goal.progress === 100 ? "✅ Completed" : "Add Progress"}
               </button>
             </div>
           ))
