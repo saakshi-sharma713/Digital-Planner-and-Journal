@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import MoodTrendChart from "../Components/MoodChart";
 import Loader from "../Components/Loader";
@@ -13,36 +13,20 @@ const moodsList = [
 ];
 
 export default function MoodTrackerDailyChart() {
-  const { moods, setMoods } = useContext(UserContext);
   const [note, setNote] = useState("");
-  const [loading, setLoading] = useState(true);
 
   const token = localStorage.getItem("token");
   const API = import.meta.env.VITE_URL;
 
-  const fetchMoods = async () => {
-    try {
-      const response = await axios.get(`${API}/mood`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-      setMoods(response.data);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { moods, fetchMoods, loadingMoods } = useContext(UserContext);
 
   useEffect(() => {
     fetchMoods();
-    // eslint-disable-next-line
   }, []);
 
   const addMood = async (mood) => {
     const today = new Date().toLocaleDateString();
+
     const moodData = {
       mood_label: mood.label,
       mood_emoji: mood.emoji,
@@ -58,6 +42,7 @@ export default function MoodTrackerDailyChart() {
           "Content-Type": "application/json",
         },
       });
+
       setNote("");
       fetchMoods();
     } catch (err) {
@@ -70,51 +55,66 @@ export default function MoodTrackerDailyChart() {
       await axios.delete(`${API}/mood/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
+
       fetchMoods();
     } catch (err) {
       console.error(err);
     }
   };
 
-  // Simple summary stats
-  const averageMood =
-    moods.length > 0
-      ? (moods.reduce((sum, m) => sum + m.mood_value, 0) / moods.length).toFixed(1)
+  // Optimized calculations
+  const averageMood = useMemo(() => {
+    return moods.length > 0
+      ? (
+          moods.reduce((sum, m) => sum + m.mood_value, 0) /
+          moods.length
+        ).toFixed(1)
       : 0;
+  }, [moods]);
 
-  const mostFrequentMood =
-    moods.length > 0
-      ? moods
-          .map((m) => m.mood_label)
-          .sort(
-            (a, b) =>
-              moods.filter((m) => m.mood_label === b).length -
-              moods.filter((m) => m.mood_label === a).length
-          )[0]
-      : "None";
+  const mostFrequentMood = useMemo(() => {
+    if (moods.length === 0) return "None";
+
+    const count = {};
+    moods.forEach((m) => {
+      count[m.mood_label] = (count[m.mood_label] || 0) + 1;
+    });
+
+    return Object.keys(count).reduce((a, b) =>
+      count[a] > count[b] ? a : b
+    );
+  }, [moods]);
 
   return (
-    <div className="min-h-screen bg-mint-100 p-10">
-      {/* Header */}
-      <h1 className="text-5xl font-bold text-peach-700 text-center mb-12">
+    <div className="min-h-screen bg-mint-100 p-6 md:p-10">
+      <h1 className="text-3xl md:text-5xl font-bold text-center mb-10">
         🎯 Mood Tracker Dashboard
       </h1>
 
-      {loading ? (
-        <div className="flex justify-center mb-6">
+      {loadingMoods ? (
+        <div className="flex justify-center">
           <Loader />
         </div>
       ) : (
         <>
-          {/* Summary Bar */}
+          {/* Summary */}
           <div className="grid md:grid-cols-2 gap-6 mb-10">
             <div className="bg-white rounded-xl shadow-md p-6 text-center">
-              <h3 className="text-lg font-semibold text-gray-700">📊 Average Mood Score</h3>
-              <p className="text-3xl font-bold text-indigo-600">{averageMood}</p>
+              <h3 className="text-lg font-semibold">
+                📊 Average Mood Score
+              </h3>
+              <p className="text-3xl font-bold text-indigo-600">
+                {averageMood}
+              </p>
             </div>
+
             <div className="bg-white rounded-xl shadow-md p-6 text-center">
-              <h3 className="text-lg font-semibold text-gray-700">⭐ Most Frequent Mood</h3>
-              <p className="text-3xl font-bold text-indigo-600">{mostFrequentMood}</p>
+              <h3 className="text-lg font-semibold">
+                ⭐ Most Frequent Mood
+              </h3>
+              <p className="text-3xl font-bold text-indigo-600">
+                {mostFrequentMood}
+              </p>
             </div>
           </div>
 
@@ -124,7 +124,7 @@ export default function MoodTrackerDailyChart() {
               <button
                 key={i}
                 onClick={() => addMood(m)}
-                className="text-4xl p-6 rounded-full shadow-lg hover:scale-110 transition-transform"
+                className="text-3xl md:text-4xl p-5 md:p-6 rounded-full shadow-lg hover:scale-110 transition-transform"
                 style={{ backgroundColor: m.color, color: "#fff" }}
               >
                 {m.emoji}
@@ -139,31 +139,45 @@ export default function MoodTrackerDailyChart() {
               placeholder="💭 Add a quick note..."
               value={note}
               onChange={(e) => setNote(e.target.value)}
-              className="w-full max-w-md px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-peach-400"
+              className="w-full max-w-md px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2"
             />
           </div>
 
-          {/* Tracker Grid */}
+          {/* Grid Section */}
           <div className="grid md:grid-cols-2 gap-8">
-            {/* History Log */}
+            {/* Mood Log */}
             <div className="bg-white rounded-xl shadow-md p-6">
-              <h2 className="text-2xl font-bold text-indigo-600 mb-4">📖 Mood Log</h2>
-              <ul className="space-y-3">
-                {moods.map((m, i) => (
+              <h2 className="text-2xl font-bold mb-4">
+                📖 Mood Log
+              </h2>
+
+              <ul className="space-y-3 max-h-[400px] overflow-y-auto">
+                {moods.map((m) => (
                   <li
-                    key={i}
+                    key={m.id}
                     className="flex justify-between items-center p-4 rounded-lg shadow-sm border-l-4"
-                    style={{ borderColor: m.color }}
                   >
                     <div>
-                      <span className="text-2xl mr-2">{m.mood_emoji}</span>
-                      <span className="font-semibold">{m.mood_label}</span>
-                      {m.note && <span className="italic text-gray-600"> — {m.note}</span>}
-                      <p className="text-xs text-gray-500 mt-1">{m.date}</p>
+                      <span className="text-2xl mr-2">
+                        {m.mood_emoji}
+                      </span>
+                      <span className="font-semibold">
+                        {m.mood_label}
+                      </span>
+                      {m.note && (
+                        <span className="italic text-gray-600">
+                          {" "}
+                          — {m.note}
+                        </span>
+                      )}
+                      <p className="text-xs text-gray-500 mt-1">
+                        {m.date}
+                      </p>
                     </div>
+
                     <button
                       onClick={() => deleteMood(m.id)}
-                      className=" text-white px-3 py-1 rounded"
+                      className="text-red-500 text-xl"
                     >
                       ❌
                     </button>
@@ -172,9 +186,11 @@ export default function MoodTrackerDailyChart() {
               </ul>
             </div>
 
-            {/* Trend Chart */}
+            {/* Chart */}
             <div className="bg-white rounded-xl shadow-md p-6">
-              <h2 className="text-2xl font-bold text-indigo-600 mb-4">📈 Mood Trend</h2>
+              <h2 className="text-2xl font-bold mb-4">
+                📈 Mood Trend
+              </h2>
               <MoodTrendChart data={moods} />
             </div>
           </div>

@@ -71,10 +71,11 @@ const Header = () => {
           <Link to="/home">Home</Link>
           <Link to="/journal">Journal</Link>
           <Link to="/todo">Todo</Link>
+           <Link to="/mood">Mood</Link>
           <Link to="/goals">Goals</Link>
           <Link to="/habit">Habit</Link>
           <Link to="/dashboard">Dashboard</Link>
-
+       
           {name && (
             <button
               onClick={handleLogout}

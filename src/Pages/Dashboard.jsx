@@ -6,7 +6,7 @@ import { UserContext } from "../ContextApi/DataContext";
 
 export default function Dashboard() {
   const { moods, BACKEND_URL } = useContext(UserContext);
-
+const {  loadingMoods } = useContext(UserContext);
   const [summary, setSummary] = useState({
     totalTasks: 0,
     completedTasks: 0,
@@ -77,11 +77,13 @@ export default function Dashboard() {
 
         <ChartCard title="Mood">
           
-          {moods?.length > 0 ? (
-            <MoodTrendChart data={moods} />
-          ) : (
-            <EmptyState message="No mood data yet." />
-          )}
+         {loadingMoods ? (
+  <p>Loading moods...</p>
+) : moods.length > 0 ? (
+  <MoodTrendChart data={moods} />
+) : (
+  <EmptyState message="No mood data yet." />
+)}
         </ChartCard>
       </div>
 

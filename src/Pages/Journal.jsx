@@ -8,49 +8,49 @@ import Doodle3 from '../Components/Doodles/Doodle3';
 import { Link } from 'react-router-dom';
 import axios from "axios"
 import toast from 'react-hot-toast';
-export default function Journal(){
-    const [file, setFile] = useState(null);
-    const [notes, setNotes] = useState('');
-    const [loading,setLoading] = useState(false)
+export default function Journal() {
+  const [file, setFile] = useState(null);
+  const [notes, setNotes] = useState('');
+  const [loading, setLoading] = useState(false)
   const API = import.meta.env.VITE_URL;
-     const token = localStorage.getItem("token");
-    // Custom toolbar with image & video options
-    const modules = {
-        toolbar: [
-            [{ header: [1, 2, false] }],
-            ['bold', 'italic', 'underline', 'strike'],
-            [{ list: 'ordered' }, { list: 'bullet' }],
-            [
-                {
-                    color: [
-                        '#000000', // black
-                        '#4B5563', // gray
-                        '#F472B6', // pink
-                        '#F9A8D4', // light pink
-                        '#FBBF24', // warm yellow
-                        '#34D399', // mint green
-                        '#60A5FA', // soft blue
-                        '#A78BFA', // lavender
-                        '#FFFFFF'  // white
-                    ]
-                },
-                {
-                    background: [
-                        '#FFFFFF', // white
-                        '#FCE7F3', // blush background
-                        '#FEF3C7', // pale yellow
-                        '#D1FAE5', // mint background
-                        '#DBEAFE', // light blue
-                        '#EDE9FE', // lavender background
-                        '#F3F4F6'  // light gray
-                    ]
-                }
-            ],
-            ['link', 'image', 'video'],
+  const token = localStorage.getItem("token");
+  // Custom toolbar with image & video options
+  const modules = {
+    toolbar: [
+      [{ header: [1, 2, false] }],
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      [
+        {
+          color: [
+            '#000000', // black
+            '#4B5563', // gray
+            '#F472B6', // pink
+            '#F9A8D4', // light pink
+            '#FBBF24', // warm yellow
+            '#34D399', // mint green
+            '#60A5FA', // soft blue
+            '#A78BFA', // lavender
+            '#FFFFFF'  // white
+          ]
+        },
+        {
+          background: [
+            '#FFFFFF', // white
+            '#FCE7F3', // blush background
+            '#FEF3C7', // pale yellow
+            '#D1FAE5', // mint background
+            '#DBEAFE', // light blue
+            '#EDE9FE', // lavender background
+            '#F3F4F6'  // light gray
+          ]
+        }
+      ],
+      ['link', 'image', 'video'],
 
-        ],
-    };
-   const uploadCloudinary = async (file) => {
+    ],
+  };
+  const uploadCloudinary = async (file) => {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("upload_preset", "Journal_media");
@@ -103,66 +103,74 @@ export default function Journal(){
       setLoading(false);
     }
   };
-    return (
-        <div className="relative min-h-screen bg-blue-300 p-6">
-            {/* Grid background */}
-        
-            <Doodle1/>
-            <Doodle3/>
+  return (
+    <div className="relative min-h-screen bg-blue-300 p-6">
+      {/* Grid background */}
 
-            
-            <div className="relative max-w-3xl mx-auto bg-white/80 rounded-xl shadow-lg p-6 z-10">
-           <div className="flex items-center justify-between mb-6">
-  <h1
-    className="text-3xl font-bold text-gray-800"
-    style={{ fontFamily: 'Patrick Hand, cursive' }}
-  >
-    Journal
-  </h1>
-
-  <Link
-    to="/journals"
-    className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition font-semibold"
-    style={{ fontFamily: 'Patrick Hand, cursive' }}
-  >
-    View Journals
-  </Link>
-</div>
- 
-                <ReactQuill
-                    value={notes}
-                    onChange={setNotes}
-                    modules={modules}
-                    placeholder="Write your journal entry..."
-                    className="bg-white rounded-md shadow-sm md:h-[400px]"
-                />
-                <div className="flex gap-4 mt-15">
-                    <button className="flex-1 bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition font-"
-                        style={{ fontFamily: 'Patrick Hand, cursive' }}
-                        onClick={(e)=>{handleSubmit(e)}}>
-                       {loading ? "Saving" : "Save"} 
-                    </button>
-                    <Link
-                        style={{ fontFamily: 'Patrick Hand, cursive' }}
-                        to="/home"
-                        className="flex-1 bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition text-center"
-                    >
-                        Back to Home page
-                    </Link>
-                    <button className="flex-1 bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition font-"
-                    onChange={(e) => setFile(e.target.files[0])}
-                        style={{ fontFamily: 'Patrick Hand, cursive' }}>
-                        <label>
-                            Upload Media
-                            <input type="file" accept="image/*,video/*" className='hidden' />
-                        </label>
+      <Doodle1 />
+      <Doodle3 />
 
 
-                    </button>
+      <div className="relative max-w-3xl mx-auto bg-white/80 rounded-xl shadow-lg p-6 z-10">
+        <div className="flex items-center justify-between mb-6">
+          <h1
+            className="text-3xl font-bold text-gray-800"
+            style={{ fontFamily: 'Patrick Hand, cursive' }}
+          >
+            Journal
+          </h1>
 
-                </div>
-
-            </div>
+          <Link
+            to="/journals"
+            className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition font-semibold"
+            style={{ fontFamily: 'Patrick Hand, cursive' }}
+          >
+            View Journals
+          </Link>
         </div>
-    );
+
+        <ReactQuill
+          value={notes}
+          onChange={setNotes}
+          modules={modules}
+          placeholder="Write your journal entry..."
+          className="bg-white rounded-md shadow-sm md:h-[400px]"
+        />
+        <div className="flex flex-col md:flex-row gap-4 mt-6">
+          {/* Save Button */}
+          <button
+            className="w-full md:flex-1 bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition"
+            style={{ fontFamily: 'Patrick Hand, cursive' }}
+            onClick={handleSubmit}
+          >
+            {loading ? "Saving..." : "Save"}
+          </button>
+
+          {/* Back Button */}
+          <Link
+            to="/home"
+            className="w-full md:flex-1 bg-blue-500 text-white py-2 rounded-md hover:bg-gray-600 transition text-center"
+            style={{ fontFamily: 'Patrick Hand, cursive' }}
+          >
+            Back to Home
+          </Link>
+
+          {/* Upload Button */}
+          <label
+            className="w-full md:flex-1 bg-blue-500 text-white py-2 rounded-md hover:bg-green-600 transition text-center cursor-pointer"
+            style={{ fontFamily: 'Patrick Hand, cursive' }}
+          >
+            Upload Media
+            <input
+              type="file"
+              accept="image/*,video/*"
+              className="hidden"
+              onChange={(e) => setFile(e.target.files[0])}
+            />
+          </label>
+        </div>
+
+      </div>
+    </div>
+  );
 }
