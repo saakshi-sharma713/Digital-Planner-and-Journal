@@ -17,7 +17,7 @@ const API = import.meta.env.VITE_URL;
         e.preventDefault(); // prevent default first
         try {
             // Call signup endpoint
-            const result = await axios.post(`${API}/user/signup`, {
+            const result = await axios.post(`${API}/user/SignUp`, {
                 name,
                 email,
                 password: pass

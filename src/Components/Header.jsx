@@ -58,11 +58,11 @@ const Header = () => {
         )}
         {/* Hamburger */}
         <button
-          className="md:hidden text-gray-800 text-2xl"
-          onClick={() => setOpen(!open)}
-        >
-          ☰
-        </button>
+  className="md:hidden text-gray-800 text-3xl transition-transform duration-300"
+  onClick={() => setOpen(!open)}
+>
+  {open ? "✖" : "☰"}
+</button>
       </div>
 
       {/* Mobile Menu */}

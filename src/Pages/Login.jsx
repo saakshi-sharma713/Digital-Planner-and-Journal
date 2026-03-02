@@ -64,7 +64,7 @@ const Login = () => {
         <form onSubmit={handleSubmit} className='text-center'>
           <input
             type="email"
-            placeholder="Enter Username"
+            placeholder="Enter Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="w-full p-4 mb-4 rounded border border-gray-300 text-xl bg-yellow-50 font-handwriting"
