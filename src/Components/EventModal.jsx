@@ -77,7 +77,7 @@ useEffect(() => {
 
     try {
       await axios.put(
-        `${API}/add-reminder/${event.id}`,
+        `${API}/calendar/add-reminder/${event.id}`,
         { reminder_option: reminderOption },
         { headers: { Authorization: `Bearer ${token}` } }
       );
