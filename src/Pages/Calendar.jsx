@@ -69,7 +69,7 @@ export default function Calendar() {
 
   try {
     await axios.post(
-      `http://localhost:8990/calendar/add`,
+      `${API}/calendar/add`,
       {
         title,
         start_datetime: utcISOString,

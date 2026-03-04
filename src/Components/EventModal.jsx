@@ -43,7 +43,7 @@ useEffect(() => {
 
       try {
         await axios.delete(
-          `http://localhost:8990/calendar/${event.id}`,
+          `${API}/calendar/${event.id}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
 
@@ -77,7 +77,7 @@ useEffect(() => {
 
     try {
       await axios.put(
-        `http://localhost:8990/calendar/add-reminder/${event.id}`,
+        `${API}/add-reminder/${event.id}`,
         { reminder_option: reminderOption },
         { headers: { Authorization: `Bearer ${token}` } }
       );
