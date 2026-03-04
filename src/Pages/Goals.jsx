@@ -130,7 +130,7 @@ export default function Goals() {
                   onClick={() => deleteGoal(goal.id)}
                   className="text-red-500 hover:text-red-700 transition"
                 >
-                  🗑 Delete
+                   ❌
                 </button>
               </div>
 

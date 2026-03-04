@@ -5,12 +5,12 @@ import toast, { Toaster } from "react-hot-toast";
 const API = import.meta.env.VITE_URL;
 const token = localStorage.getItem("token");
 
-const EditEventPage = ({ event, onCancel }) => {
+const EditEventPage = ({ event, onCancel ,time}) => {
   const [minutesLeft, setMinutesLeft] = useState(null);
   const [showReminder, setShowReminder] = useState(false);
   const [reminderOption, setReminderOption] = useState("");
-  const [reminderSet, setReminderSet] = useState(!!event?.reminder_time);
-
+  const [reminderSet, setReminderSet] = useState(false);
+  console.log(event.reminder_time)
   // ✅ Format Date in IST
   const formatISTDate = (utc) =>
     new Date(utc).toLocaleDateString("en-IN", {
@@ -30,6 +30,7 @@ const EditEventPage = ({ event, onCancel }) => {
  const deletedRef = useRef(false);
 
 useEffect(() => {
+   setReminderSet(!!event?.reminder_time);
   if (!event?.start) return;
 
   const startTime = new Date(event.start);
@@ -56,6 +57,7 @@ useEffect(() => {
 
       return;
     }
+    
 
     if (diff > 0) {
       const totalMinutes = Math.floor(diff / 60000);
@@ -97,9 +99,9 @@ useEffect(() => {
         className="w-[350px] sm:w-[400px] bg-white rounded-2xl shadow-2xl p-6"
         style={{ backgroundColor: event?.backgroundColor }}
       >
-        <Toaster />
+      
 
-        <h2 className="text-4xl font-bold mb-4 text-gray-800">
+        <h2 className="text-5xl font-bold mb-4 text-gray-800">
           {event?.title}
         </h2>
 
@@ -109,12 +111,12 @@ useEffect(() => {
         </p>
 
         <p className="text-sm text-gray-700 mb-4">
-          ⏰ {formatISTTime(event.start)}
+          ⏰ At {formatISTTime(event.start)}
         </p>
 
         {/* ✅ Countdown */}
         {minutesLeft && (
-          <p className="text-sm font-medium text-gray-800 mb-4">
+          <p className="text-md font-medium text-gray-700 mb-4 flex gap-2">
             {minutesLeft === "Started"
               ? "⏰ Event started"
               : `⏱ Event in ${minutesLeft}`}
@@ -122,7 +124,7 @@ useEffect(() => {
         )}
 
         {/* ✅ Reminder Section */}
-        {reminderSet ? (
+        { event?.reminder_time ? (
           <p className="text-sm font-medium text-green-700 mb-3">
             🔔 Reminder already set
           </p>
@@ -130,7 +132,7 @@ useEffect(() => {
           <>
             <button
               onClick={() => setShowReminder(!showReminder)}
-              className="text-sm font-medium mb-3 hover:text-blue-600 transition"
+              className="text-sm font-medium mb-3 text-gray-700 transition"
             >
               🔔 Add Reminder
             </button>

@@ -13,7 +13,7 @@ export default function Calendar() {
   const [events, setEvents] = useState([]);
   const [editingEvent, setEditingEvent] = useState(null);
   const token = localStorage.getItem("token"); // JWT token
-  const [id,setId] = useState("");
+  const [reminderTime,setTime] = useState("");
   // Fetch events from backend
   const fetchEvents = async () => {
     try {
@@ -24,12 +24,14 @@ export default function Calendar() {
         },
       });
       console.log(res)
+      setTime(res.data.reminder_time)
       setEvents(
         res.data.map((e) => ({
           ...e,
           start: new Date(e.start_datetime),
           backgroundColor: e.background_color,
           textColor: e.text_color,
+          reminder_time: e.reminder_time,
         }))
       );
     } catch (err) {
@@ -96,6 +98,7 @@ const handleEventDrop = (info) => {
       start: info.event.start,
       backgroundColor: info.event.backgroundColor,
       textColor: info.event.textColor,
+      reminder_time: info.event.extendedProps.reminder_time
     });
   };
 
@@ -140,7 +143,7 @@ const handleEventDrop = (info) => {
   };
 
   if (editingEvent) {
-    return <EventModal event={editingEvent} onSave={saveEditedEvent} onCancel={cancelEdit} id={id}/>;
+    return <EventModal event={editingEvent} onSave={saveEditedEvent} onCancel={cancelEdit} />;
   }
 
   return (

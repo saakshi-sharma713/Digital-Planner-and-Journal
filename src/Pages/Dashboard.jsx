@@ -92,7 +92,7 @@ const {  loadingMoods } = useContext(UserContext);
         {goals.length > 0 ? (
           goals.map((goal) => (
             <div key={goal.id} className="mb-4">
-              <p className="text-sm font-medium text-[#cc4422] mb-2">
+              <p className="text-sm font-medium  mb-2">
                 {goal.goal_name}
               </p>
 

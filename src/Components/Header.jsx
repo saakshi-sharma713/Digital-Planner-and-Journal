@@ -20,7 +20,7 @@ const Header = () => {
   };
 
   return (
-    <header className="relative z-50 flex justify-between items-center px-6 py-4 shadow-md bg-white w-full z-10">
+    <header className=" relative z-50 flex justify-between items-center px-15 py-4 shadow-md bg-white w-full z-10">
       <h1 className="text-2xl font-bold text-gray-800">Daily Dock</h1>
 
       <div className="flex items-center gap-6">
