@@ -135,7 +135,7 @@ body{
 .ql-editor{
   font-family: 'Patrick Hand', cursive;
   font-size: 1.1rem;
-  border:none;
+  
 }
 h1{
   font-family:'Patrick Hand', cursive;
@@ -151,7 +151,9 @@ h1{
   height: auto;       /* keep aspect ratio */
   border-radius: 8px; /* optional rounded corners */
 }
-
+.ql-container{
+  border:none !important
+}
 .ql-uploadImage::before {
   content: "Upload"; /* upload icon */
   font-size: 16px;

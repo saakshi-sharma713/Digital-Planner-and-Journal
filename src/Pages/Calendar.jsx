@@ -13,7 +13,7 @@ export default function Calendar() {
   const [events, setEvents] = useState([]);
   const [editingEvent, setEditingEvent] = useState(null);
   const token = localStorage.getItem("token"); // JWT token
-
+  const [id,setId] = useState("");
   // Fetch events from backend
   const fetchEvents = async () => {
     try {
@@ -42,36 +42,48 @@ export default function Calendar() {
   }, []);
 
   const handleDateClick = async (info) => {
-    const title = prompt("Enter Event Title");
-    const time = prompt("Enter Time (HH:MM)");
-    if (!title || !time) return;
+  const title = prompt("Enter Event Title");
+  const time = prompt("Enter Time (HH:MM or 8:00 PM)");
 
-    const randomColor = pastelColors[Math.floor(Math.random() * pastelColors.length)];
-     const date = new Date(`${info.dateStr} ${time}`);
-  
+  if (!title || !time) return;
 
-    try {
-   const response =   await axios.post(
-        `${API}/calendar/add`,
-        {
-          title,
-          start_datetime:date,
-          background_color: randomColor,
-          text_color: "#fff",
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      console.log(response)
-      fetchEvents();
-    } catch (err) {
-      console.error("Error adding event:", err);
-    }
-  };
+  const match = time.match(/(\d+):(\d+)\s*(AM|PM)?/i);
+  if (!match) return alert("Invalid time format");
+
+  let [hours, minutes, meridian] = match.slice(1);
+  hours = parseInt(hours);
+  minutes = parseInt(minutes);
+
+  if (meridian) {
+    if (meridian.toUpperCase() === "PM" && hours < 12) hours += 12;
+    if (meridian.toUpperCase() === "AM" && hours === 12) hours = 0;
+  }
+
+  const date = new Date(info.dateStr);
+  date.setHours(hours, minutes, 0, 0);
+
+  const utcISOString = date.toISOString(); // ✅ ONLY THIS
+
+  const randomColor =
+    pastelColors[Math.floor(Math.random() * pastelColors.length)];
+
+  try {
+    await axios.post(
+      `http://localhost:8990/calendar/add`,
+      {
+        title,
+        start_datetime: utcISOString,
+        background_color: randomColor,
+        text_color: "#fff",
+      },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    fetchEvents();
+  } catch (err) {
+    console.error(err);
+  }
+};
 const handleEventDrop = (info) => {
   setEvents(events.map(e =>
     e.id === info.event.id ? { ...e, start: info.event.start } : e
@@ -128,7 +140,7 @@ const handleEventDrop = (info) => {
   };
 
   if (editingEvent) {
-    return <EventModal event={editingEvent} onSave={saveEditedEvent} onCancel={cancelEdit} />;
+    return <EventModal event={editingEvent} onSave={saveEditedEvent} onCancel={cancelEdit} id={id}/>;
   }
 
   return (

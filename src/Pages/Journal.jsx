@@ -136,7 +136,7 @@ export default function Journal() {
           placeholder="Write your journal entry..."
           className="bg-white rounded-md shadow-sm md:h-[400px]"
         />
-        <div className="flex flex-col md:flex-row gap-4 mt-6">
+        <div className="flex flex-col md:flex-row gap-4 mt-8">
           {/* Save Button */}
           <button
             className="w-full md:flex-1 bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition"
