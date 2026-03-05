@@ -124,7 +124,7 @@ useEffect(() => {
         )}
 
         {/* ✅ Reminder Section */}
-        { event?.reminder_time ? (
+        { reminderSet ? (
           <p className="text-sm font-medium text-green-700 mb-3">
             🔔 Reminder already set
           </p>
