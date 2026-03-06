@@ -2,20 +2,20 @@
 /* ===== OUTER BOARD ===== */
 @import "tailwindcss";
 *{
-   font-family: 'Patrick Hand', cursive;
+   font-family: 'Patrick Hand';
 }
 body{
   margin:0;
   padding:0;
 }
 .abc{
-    font-family: 'Patrick Hand', cursive;
+    font-family: 'Patrick Hand';
 }
 .fc {
   background: #1e1e1e !important;   /* black outer */
   padding: 20px;
   border-radius: 18px;
-  font-family: 'Caveat', cursive;
+  font-family: 'Caveat';
 }
 
 /* ===== REMOVE DEFAULT GRID BACKGROUND ===== */
@@ -52,14 +52,14 @@ body{
 /* ===== DAY NUMBERS ===== */
 .fc-daygrid-day-number {
   color: #333 !important;
-  font-family: 'Patrick Hand', cursive !important;
+  font-family: 'Patrick Hand' !important;
   font-size: 18px;
 }
 
 /* ===== MONTH TITLE ===== */
 .fc-toolbar-title {
   color: #ffffff !important;
-  font-family: 'Patrick Hand', cursive !important;
+  font-family: 'Patrick Hand' !important;
   font-size: 30px;
 }
 
@@ -69,7 +69,7 @@ body{
   color: #fff !important;
   border: none !important;
   border-radius: 8px !important;
-  font-family: 'Patrick Hand', cursive !important;
+  font-family: 'Patrick Hand' !important;
    margin: 0 6px !important;
 }
 
@@ -94,7 +94,7 @@ body{
   box-shadow: 0 6px 10px rgba(0,0,0,0.25);
   transform: rotate(-2deg);
   transition: 0.2s ease;
-  font-family: 'Caveat', cursive;
+  font-family: 'Caveat';
   display: inline-block;
 }
 
@@ -123,22 +123,22 @@ body{
   font-size: 26px !important;   /* increase this if needed */
   font-weight:bolder;
   color: #333;
-  font-family: 'Patrick Hand', cursive;
+  font-family: 'Patrick Hand';
 }
 
 .fc-timegrid-slot-label-cushion {
-  font-family: 'Patrick Hand', cursive !important;
+  font-family: 'Patrick Hand' !important;
   font-size: 18px !important;
   color: #444 !important;
 }
 
 .ql-editor{
-  font-family: 'Patrick Hand', cursive;
+  font-family: 'Patrick Hand';
   font-size: 1.1rem;
   
 }
 h1{
-  font-family:'Patrick Hand', cursive;
+  font-family:'Patrick Hand';
   font-size: 1.7rem;
 }
 .ql-toolbar {
@@ -157,7 +157,7 @@ h1{
 .ql-uploadImage::before {
   content: "Upload"; /* upload icon */
   font-size: 16px;
-  font-family: 'Patrick Hand', cursive;
+  font-family: 'Patrick Hand';
 }
 /* Force toolbar buttons to wrap on small screens */
 .fc .fc-toolbar {
