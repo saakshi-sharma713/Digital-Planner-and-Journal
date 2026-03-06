@@ -2,7 +2,7 @@
 /* ===== OUTER BOARD ===== */
 @import "tailwindcss";
 *{
-   font-family: 'Patrick Hand';
+   font-family: 'Patrick Hand' !important;
 }
 body{
   margin:0;
