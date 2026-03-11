@@ -3,7 +3,7 @@ import GridLines from '../Components/GridLines';
 import Doodle3 from '../Components/Doodles/Doodle3';
 import Doodle1 from '../Components/Doodles/Doodle1';
 import Doodle2 from '../Components/Doodles/Doodle2';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
@@ -15,6 +15,7 @@ const SignUp = () => {
 const API = import.meta.env.VITE_URL;
     async function handleSubmit(e) {
         e.preventDefault(); // prevent default first
+        
         try {
             // Call signup endpoint
             const result = await axios.post(`${API}/user/SignUp`, {
@@ -79,6 +80,7 @@ const API = import.meta.env.VITE_URL;
                     >
                         Sign Up
                     </button>
+                    <h2 className='mt-5 ml-7'>Already have an account? <Link to="/">Login</Link></h2>
                 </form>
             </div>
         </div>
