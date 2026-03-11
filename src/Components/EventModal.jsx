@@ -5,19 +5,21 @@ import toast, { Toaster } from "react-hot-toast";
 const API = import.meta.env.VITE_URL;
 const token = localStorage.getItem("token");
 
-const EditEventPage = ({ event, onCancel ,time}) => {
+const EditEventPage = ({ event, onCancel, time }) => {
   const [minutesLeft, setMinutesLeft] = useState(null);
   const [showReminder, setShowReminder] = useState(false);
   const [reminderOption, setReminderOption] = useState("");
   const [reminderSet, setReminderSet] = useState(false);
-  console.log(event.reminder_time)
-  // ✅ Format Date in IST
+
+  const deletedRef = useRef(false);
+
+  // Format Date IST
   const formatISTDate = (utc) =>
     new Date(utc).toLocaleDateString("en-IN", {
       timeZone: "Asia/Kolkata",
     });
 
-  // ✅ Format Time in IST
+  // Format Time IST
   const formatISTTime = (utc) =>
     new Date(utc).toLocaleTimeString("en-IN", {
       timeZone: "Asia/Kolkata",
@@ -26,54 +28,59 @@ const EditEventPage = ({ event, onCancel ,time}) => {
       hour12: false,
     });
 
-  // ✅ Countdown Logic (UTC safe)
- const deletedRef = useRef(false);
+  useEffect(() => {
+  if (!event?.start_datetime) return;
 
-useEffect(() => {
-   setReminderSet(!!event?.reminder_time);
-  if (!event?.start) return;
+  setReminderSet(!!event?.reminder_time);
 
-  const startTime = new Date(event.start);
+  const startTime = new Date(event.start_datetime).getTime();
 
   const updateTimer = async () => {
-    const now = new Date();
+    const now = Date.now(); // ✅ must be inside timer
     const diff = startTime - now;
 
     if (diff <= 0 && !deletedRef.current) {
       deletedRef.current = true;
 
       try {
-        await axios.delete(
-          `${API}/calendar/${event.id}`,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
+        await axios.delete(`${API}/calendar/${event.id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
-        toast.success("Event auto deleted ⏳");
+        toast.success("Past event auto deleted ⏳");
         onCancel("close");
       } catch (err) {
-        console.error(err);
+        console.log(err);
         toast.error("Auto delete failed");
       }
 
       return;
     }
-    
 
-    if (diff > 0) {
-      const totalMinutes = Math.floor(diff / 60000);
-      const hours = Math.floor(totalMinutes / 60);
-      const minutes = totalMinutes % 60;
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
 
-      setMinutesLeft(`${hours}h ${minutes}m`);
+    let timeString = "";
+
+    if (days > 0) {
+      timeString = hours > 0 ? `${days}d ${hours}h` : `${days}d`;
+    } else if (hours > 0) {
+      timeString = minutes > 0 ? `${hours}h ${minutes}m` : `${hours}h`;
+    } else {
+      timeString = `${minutes}m`;
     }
+
+    setMinutesLeft(timeString);
   };
 
   updateTimer();
-  const interval = setInterval(updateTimer, 60000);
+
+  const interval = setInterval(updateTimer, 1000);
 
   return () => clearInterval(interval);
 }, [event]);
-  // ✅ Save Reminder
+
   const handleSaveReminder = async () => {
     if (!reminderOption) return toast.error("Select a reminder option");
 
@@ -99,32 +106,23 @@ useEffect(() => {
         className="w-[350px] sm:w-[400px] bg-white rounded-2xl shadow-2xl p-6"
         style={{ backgroundColor: event?.backgroundColor }}
       >
-      
+        <Toaster />
 
         <h2 className="text-5xl font-bold mb-4 text-gray-800">
           {event?.title}
         </h2>
 
-        {/* ✅ Scheduled Time */}
         <p className="text-sm text-gray-700 mb-2">
-          📅 Scheduled on :{formatISTDate(event.start)}
+          📅 Scheduled on : {formatISTDate(event.start_datetime)}
         </p>
 
-        <p className="text-sm text-gray-700 mb-4">
-          ⏰ At {formatISTTime(event.start)}
+        <p className="text-sm text-gray-700 mb-3">
+          ⏰ At {formatISTTime(event.start_datetime)}
         </p>
 
-        {/* ✅ Countdown */}
-        {minutesLeft && (
-          <p className="text-md font-medium text-gray-700 mb-4 flex gap-2">
-            {minutesLeft === "Started"
-              ? "⏰ Event started"
-              : `⏱ Event in ${minutesLeft}`}
-          </p>
-        )}
+      
 
-        {/* ✅ Reminder Section */}
-        { reminderSet ? (
+        {reminderSet ? (
           <p className="text-sm font-medium text-green-700 mb-3">
             🔔 Reminder already set
           </p>
@@ -132,7 +130,7 @@ useEffect(() => {
           <>
             <button
               onClick={() => setShowReminder(!showReminder)}
-              className="text-sm font-medium mb-3 text-gray-700 transition"
+              className="text-sm font-medium mb-3 text-gray-700"
             >
               🔔 Add Reminder
             </button>
@@ -166,14 +164,14 @@ useEffect(() => {
         <div className="flex justify-end gap-3">
           <button
             onClick={() => onCancel("delete")}
-            className="px-4 py-2 text-sm bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
+            className="px-4 py-2 text-sm bg-red-500 text-white rounded-lg"
           >
             Delete
           </button>
 
           <button
             onClick={() => onCancel("close")}
-            className="px-4 py-2 text-sm bg-gray-700 text-white rounded-lg hover:bg-gray-800 transition"
+            className="px-4 py-2 text-sm bg-gray-700 text-white rounded-lg"
           >
             Close
           </button>

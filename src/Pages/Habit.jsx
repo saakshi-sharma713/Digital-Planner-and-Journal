@@ -61,6 +61,7 @@ export default function Habit() {
     );
 
     try {
+      console.log(updatedDays)
       await axios.put(
         `${API}/habits/${habit.id}`,
         { completed_days: updatedDays },

@@ -64,7 +64,14 @@ export default function Calendar() {
   const date = new Date(info.dateStr);
   date.setHours(hours, minutes, 0, 0);
 
-  const utcISOString = date.toISOString(); // ✅ ONLY THIS
+  // ✅ Prevent past events
+  const now = new Date();
+  if (date < now) {
+    alert("You cannot create events in the past ⏳");
+    return;
+  }
+
+  const utcISOString = date.toISOString();
 
   const randomColor =
     pastelColors[Math.floor(Math.random() * pastelColors.length)];
@@ -95,7 +102,7 @@ const handleEventDrop = (info) => {
     setEditingEvent({
       id: info.event.id,
       title: info.event.title,
-      start: info.event.start,
+        start_datetime: info.event.start,
       backgroundColor: info.event.backgroundColor,
       textColor: info.event.textColor,
       reminder_time: info.event.extendedProps.reminder_time
